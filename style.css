@@ -268,12 +268,12 @@ iframe.footer {
   background-color: rgb(220, 220, 220);
 }
 
-.login-content {
+.form-content {
   display: flex;
   margin: auto;
 }
 
-.login-div {
+.form-div {
   background-color: #ebebeb;
   border-radius: 8px;
   float: center;
@@ -281,25 +281,25 @@ iframe.footer {
   box-shadow: 8px 8px 8px rgb(25, 25, 25);
 }
 
-.login-div h1 {
+.form-div h1 {
   margin: 0;
   text-align: center;
 }
 
-.login-div h3 {
+.form-div h3 {
   margin-top: 20px;
   margin-bottom: 8px;
   font-size: 18px;
 }
 
-.login-div input[type="text"] {
+.form-div input[type="text"] {
   border: none;
   font-size: 18px;
   padding: 6px 6px;
   border-radius: 4px;
 }
 
-.login-div button {
+.form-div button {
   padding: 8px 10px;
   margin-top: 16px;
   border: none;
@@ -312,21 +312,21 @@ iframe.footer {
   border-radius: 4px;
 }
 
-.login-div button:hover {
+.form-div button:hover {
   background-color: #62afee;
 }
 
-.login-div .login-inputs {
+.form-div .form-inputs {
   padding-bottom: 16px;
 }
 
-.login-div a {
+.form-div a {
   text-decoration: none;
   color: black;
   font-size: 14px;
   font-weight: bold;
 }
 
-.login-div a:hover {
+.form-div a:hover {
   color: rgb(100, 100, 100);
 }
