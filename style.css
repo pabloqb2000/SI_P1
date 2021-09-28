@@ -1,0 +1,332 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(49, 49, 49);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+*:focus {
+  outline: none;
+}
+
+iframe {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+iframe.header {
+  height: 61px;
+}
+
+iframe.footer {
+  height: 61px;
+  margin-top: auto;
+}
+
+.footer-content {
+  background-color: rgb(90, 90, 90);
+  margin: 0;
+  height: 61px;
+  padding-left: 16px;
+}
+
+.footer-content .footer-links {
+  float: right;
+  color: white;
+  text-align: center;
+  padding: 20px 0px;
+  font-size: 16px;
+  margin: auto;
+  font-weight: lighter;
+  margin-right: 10px;
+}
+
+.footer-content .footer-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.footer-content .footer-links a:hover {
+  color: rgb(220, 220, 220);
+}
+
+.main-row {
+  display: flex;
+  flex-grow: 1;
+  height: 80vh;
+}
+
+.side-menu {
+  width: 300px;
+  background-color: rgb(34, 34, 34);
+  border-right: 1px solid rgb(83, 83, 83);
+}
+
+.content {
+  color: white;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-grow: 1;
+  padding-top: 32px;
+}
+
+.content-title {
+  font-size: 48px;
+  text-align: center;
+  margin: 0;
+  padding-top: 16px;
+  text-transform: uppercase;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #ebebeb;
+}
+
+.navbar h1 {
+  float: left;
+}
+
+.navbar a {
+  float: right;
+  color: black;
+  text-align: center;
+  padding: 20px 16px;
+  text-decoration: none;
+  font-size: 18px;
+  margin: auto;
+  /* border-left: 1px solid rgb(44, 44, 44); */
+}
+
+.navbar h1 a {
+  text-decoration: none;
+  font-size: 28px;
+  padding: 0px 15px;
+}
+
+.navbar h1 a:hover {
+  background-color: inherit;
+}
+
+.navbar a i {
+  font-size: 24px;
+}
+
+.navbar a:hover {
+  background-color: rgb(220, 220, 220);
+  color: black;
+}
+
+.navbar a.active {
+  background-color: #2196F3;
+  color: white;
+}
+
+.navbar a.active:hover {
+  background-color: #62afee;
+  color: white;
+}
+
+.side-menu .search-container {
+  float: right;
+  padding: 32px 12px;
+}
+
+.side-menu .search-title {
+  color: white;
+  margin: 0px;
+  font-size: 20px;
+}
+
+.side-menu input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+  border-radius: 4px;
+}
+
+.side-menu input[type=text]:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.side-menu .search-container button {
+  float: right;
+  padding: 6px 10px;
+  margin-top: 8px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.side-menu .search-container button:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.side-menu .search-container select {
+  border: none;
+  font-size: 17px;
+  cursor: pointer;
+  margin-top: 12px;
+  height: 32px;
+  width: 80%;   
+  border-radius: 4px;
+}
+
+.side-menu .search-container select:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.films {
+  padding: 0px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 200px);
+  column-gap: 1.5rem;
+  row-gap: 0.5rem;
+}
+
+.film {
+  padding: 20px 20px;
+  background-color: rgb(28, 31, 48);
+  border-radius: 8px;
+  width: fit-content;
+  margin: 16px 16px;
+  color: white;
+}
+
+.film:hover {
+  background-color: rgb(24, 27, 39);
+  color: rgb(220, 220, 220);
+}
+
+.film a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.film .film-info h1 {
+  text-transform: capitalize;
+}
+
+.film .film-img {
+    width: fit-content;
+}
+
+.film .film-img img {
+    width: 150px;
+    border-radius: 4px;
+}
+
+
+.film:hover .film-img img {
+  filter: brightness(0.8);
+}
+
+.film .film-info h1 {
+    font-size: 20px;
+}
+
+.film-title {
+  color: white;
+  text-align: center;
+}
+
+.film-image {
+  height: 80%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 32px;
+}
+
+.film-description {
+  padding-left: 32px;
+  font-size: 24px;
+  color: white;
+}
+
+.add-film-to-cart-btn {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  border-radius: 4px;
+  font-size: 17px;
+  padding: 12px 16px;
+  background-color: white;
+}
+
+.add-film-to-cart-btn:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.login-content {
+  display: flex;
+  margin: auto;
+}
+
+.login-div {
+  background-color: #ebebeb;
+  border-radius: 8px;
+  float: center;
+  padding: 16px 16px;
+  box-shadow: 8px 8px 8px rgb(25, 25, 25);
+}
+
+.login-div h1 {
+  margin: 0;
+  text-align: center;
+}
+
+.login-div h3 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.login-div input[type="text"] {
+  border: none;
+  font-size: 18px;
+  padding: 6px 6px;
+  border-radius: 4px;
+}
+
+.login-div button {
+  padding: 8px 10px;
+  margin-top: 16px;
+  border: none;
+  display: block;
+  margin-top: 24px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #2196F3;
+  color: white;
+  border-radius: 4px;
+}
+
+.login-div button:hover {
+  background-color: #62afee;
+}
+
+.login-div .login-inputs {
+  padding-bottom: 16px;
+}
+
+.login-div a {
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.login-div a:hover {
+  color: rgb(100, 100, 100);
+}
