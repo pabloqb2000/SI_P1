@@ -270,12 +270,16 @@ iframe.footer {
 .form-content {
   display: flex;
   margin: auto;
+  width: 100vw;
+  height: 75vh;
+  overflow: auto;
+  padding: 16px 16px;
 }
 
 .form-div {
   background-color: #ebebeb;
   border-radius: 8px;
-  float: center;
+  margin: auto;
   padding: 16px 16px;
   box-shadow: 8px 8px 8px rgb(25, 25, 25);
 }
