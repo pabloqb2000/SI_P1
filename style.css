@@ -70,8 +70,7 @@ iframe.footer {
 
 .content {
   color: white;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
   flex-grow: 1;
   padding-top: 32px;
 }
@@ -135,7 +134,7 @@ iframe.footer {
 
 .side-menu .search-container {
   float: right;
-  padding: 32px 12px;
+  padding: 0px 12px;
 }
 
 .side-menu .search-title {
@@ -234,7 +233,7 @@ iframe.footer {
     font-size: 20px;
 }
 
-.film-title {
+.side-menu-title {
   color: white;
   text-align: center;
 }
@@ -253,7 +252,7 @@ iframe.footer {
   color: white;
 }
 
-.add-film-to-cart-btn {
+.side-menu-btn {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -264,7 +263,7 @@ iframe.footer {
   background-color: white;
 }
 
-.add-film-to-cart-btn:hover {
+.side-menu-btn:hover {
   background-color: rgb(220, 220, 220);
 }
 
@@ -329,4 +328,60 @@ iframe.footer {
 
 .form-div a:hover {
   color: rgb(100, 100, 100);
+}
+
+.side-menu hr {
+  width: 75%;
+}
+
+.checkout-content {
+  padding: 16px 32px;
+  font-size: 17px;
+  color: white;
+}
+
+.buy-item {
+  background-color: rgb(30, 30, 30);
+  border-radius: 8px;
+  margin: 16px 16px;
+  padding: 20px 16px;
+  border: 1px solid rgb(83, 83, 83);
+  display: flex;
+}
+
+.item-content {
+  display: flex;
+  flex-direction: row;
+  width: 92%;
+}
+
+.buy-item h1 {
+  font-size: 24px;
+  margin: 0px;
+}
+
+.buy-item img {
+  height: 100px;
+  border-radius: 4px;
+  margin-right: 16px;
+}
+
+.buy-item button {
+  border: none;
+  border-radius: 6px;
+  height: 50px;
+  width: 50px;
+  margin-top: auto;
+  margin-bottom: auto;
+  background-color: rgb(206, 66, 66);
+  color: white;
+  font-size: 20px;
+}
+
+.buy-item button:hover {
+  background-color: rgb(230, 99, 99);
+}
+
+.item-info p {
+  margin: 12px 12px;
 }
