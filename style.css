@@ -298,6 +298,10 @@ iframe.footer {
   border-radius: 4px;
 }
 
+.form-div input[type="text"]:hover {
+  background-color: rgb(230, 230, 230);
+}
+
 .form-div button {
   padding: 8px 10px;
   margin-top: 16px;
@@ -350,9 +354,15 @@ iframe.footer {
 }
 
 .item-content {
+  text-decoration: none;
+  color: white;
   display: flex;
   flex-direction: row;
   width: 92%;
+}
+
+.item-content:hover {
+  filter: brightness(0.8);
 }
 
 .buy-item h1 {
