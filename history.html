@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<iframe src="header.html" title="Header" scrolling="no" class="header"></iframe>
+
+<div class="main-row">
+    <div class="side-menu">
+        <h1 class="side-menu-title">Search</h1>
+        <div class="search-container">
+        <form action="/action_page.php">
+            <input type="text" placeholder="Type here..." name="search">
+            <button type="submit"><i class="fa fa-search"></i></button>
+            <select name="categories" id="category">
+            <option value="all">All</option>
+            <option value="humor">Humor</option>
+            <option value="action">Action</option>
+            </select>
+        </form>
+        </div>
+    </div>
+
+    <div class="user-preview">
+        <div class="user-image">
+            <a href="imgs/user.png">
+            <img src="imgs/user.png" alt="User image">
+            </a>
+        </div>
+        <div class="user-info">
+            <h1 class="user-name">Pepe Comepinga</h1>
+        </div>
+        <div class="user-money">
+            <h3>Saldo: 420.69 $</h2>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1 class="content-title">Your Profile</h1>
+        <h3>Purchase history</h3>
+            <div class="history-film" style="height: 200px;">
+                <a href="film.html">
+                    <img src="imgs/Orgazmo.jpg" alt="Film image">
+                    <h1 style="text-align: center;">Orgazmo</h1>
+                </a>
+            </div>
+    </div>
+</div>
+
+<iframe src="footer.html" title="Footer" scrolling="no" class="footer"></iframe>
+
+</body>
+</html>

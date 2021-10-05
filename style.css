@@ -399,3 +399,44 @@ iframe.footer {
 .item-info p {
   margin: 12px 12px;
 }
+
+.user-preview {
+  width: 300px;
+  height: 100%;
+  color: white;
+}
+
+.user-image img{
+  height: 80%;
+  display:block;
+  margin:auto;
+  padding-top: 32px;
+}
+
+.user-info h1, h3{
+  text-align: center;
+}
+
+.user-history{
+  margin: 0 auto;
+}
+
+.history-film{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 200px);
+  column-gap: 1.5rem;
+  row-gap: 0.5rem;
+}
+
+.history-film img{
+  height: 80%;
+  display:block;
+  padding-left: 5%;
+  padding-top: 32px;
+}
+
+.history-film h1{
+  display: inline-block;
+}
+
+
