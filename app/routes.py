@@ -5,14 +5,23 @@ from app import app
 from flask import render_template, request, url_for, redirect, session, abort
 import json
 import os
+from os import path
+import hashlib
+import random
 import sys
+from app.utils import *
 
 @app.route('/')
 @app.route('/index')
 def index():
     catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
     catalogue = json.loads(catalogue_data)
-    return render_template('index.html', title = "Home", films=catalogue['peliculas'])
+    films = catalogue['peliculas']
+
+    if request.args:
+        films = filter_search(films, request.args)
+
+    return render_template('index.html', title = "Home", films=films)
     
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -50,9 +59,69 @@ def film(film_id):
 
     return render_template('film.html', title=film['titulo'], film=film)
 
-@app.route('/register')
+@app.route('/register', methods=['GET'])
 def regiter():
-    return render_template('register.html', title='Register')
+    user_data = {
+        'email': '',
+        'username': '',
+        'creditcard': '',
+        'direction': '',
+    }
+    return render_template('register.html', title='Register', values=user_data)
+
+@app.route('/register', methods=['POST'])
+def register_post():
+    # Get information from request
+    email = request.form.get('email')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    confirmation = request.form.get('confirmation')
+    creditcard = request.form.get('creditcard')
+    direction = request.form.get('direction')
+
+    # Encode password and generate salt
+    ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    chars=[]
+    for i in range(16):
+        chars.append(random.choice(ALPHABET))
+
+    salt = "".join([
+        random.choice("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        for _ in range(16)
+    ])
+    password_hash = hashlib.blake2b((salt+password).encode('utf-8')).hexdigest()
+
+    # Validate user data
+    user_data = {
+        'email': email,
+        'username': username,
+        'password': password_hash,
+        'creditcard': creditcard,
+        'direction': direction,
+        'salt': salt,
+        'balance': random.randint(0, 100),
+    }
+    validation_msg = validate_user_registration_data(email, username, password, confirmation, creditcard, direction)
+    if validation_msg:
+        return render_template('register.html', title='Register', error_msg=validation_msg, values=user_data)
+
+    # Check if username already exists
+    base_dir = path.join(path.dirname(path.abspath(__file__)), 'usuarios')
+    other_users = [
+        name for name in os.listdir(base_dir) 
+        if path.isdir(os.path.join(base_dir, name))
+    ]
+    if username in other_users:
+        return render_template('register.html', title='Register', error_msg='Username is already in use!', values=user_data)
+        return redirect(url_for('index'))
+
+    # Create a new user file
+    user_dir = path.join(base_dir, username)
+    os.mkdir(user_dir)
+    with open(path.join(user_dir, 'datos.dat'), 'w', encoding='utf-8') as f:
+        json.dump(user_data, f, ensure_ascii=False, indent=4)
+
+    return redirect(url_for('login'))
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

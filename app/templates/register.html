@@ -8,21 +8,36 @@
 {% block content %}
 <div class="form-content">
   <div class="form-div">
-    <form action="/action_page.php">
+    <form action="/register", method="POST">
       <div class="form-inputs">
         <h1>Register</h1>
-        <label for="email"><h3>Email</h5></label>
-        <input type="text" placeholder="marianorajoy@mimail.es" name="email" id="email">
-        <label for="username"><h3>Username</h5></label>
-        <input type="text" placeholder="username" name="username" id="username">
-        <label for="password"><h3>Password</h5></label>
-        <input type="password" placeholder="password" name="password" id="password">
-        <label for="confirmation"><h3>Confirm Password</h5></label>
-        <input type="password" placeholder="password" name="confirmation" id="confirmation">
-        <label for="credit-card"><h3>Credit card</h5></label>
-        <input type="text" placeholder="ES00-0000-0000-0000" name="credit-card" id="credit-card">
-        <label for="direction"><h3>Direction</h5></label>
-        <input type="text" placeholder="C/Francisco Tomás y Valiente, 11" name="direction" id="direction">
+        {% if error_msg %} <p>{{ error_msg }}</p> {% endif %}
+        <div class="form-input">
+          <label for="email"><h3>Email</h3></label>
+          <input type="text" placeholder="marianorajoy@mimail.es" name="email" id="email" value="{{ values.email }}">
+        </div>
+        <div class="form-input">
+          <label for="username"><h3>Username</h3></label>
+          <input type="text" placeholder="username" name="username" id="username" value="{{ values.username }}">
+        </div>
+        <hr>
+        <div class="form-input">
+          <label for="password"><h3>Password</h3></label>
+          <input type="password" placeholder="password" name="password" id="password">
+        </div>
+        <div class="form-input">
+          <label for="confirmation"><h3>Confirm Password</h3></label>
+          <input type="password" placeholder="password" name="confirmation" id="confirmation">
+        </div>
+        <hr>
+        <div class="form-input">
+          <label for="creditcard"><h3>Credit card</h3></label>
+          <input type="text" placeholder="0000-0000-0000-0000" name="creditcard" id="creditcard" value="{{ values.creditcard }}">
+        </div>
+        <div class="form-input">
+          <label for="direction"><h3>Direction</h3></label>
+          <input type="text" placeholder="C/Francisco Tomás y Valiente, 11" name="direction" id="direction" value="{{ values.direction }}">
+        </div>
       </div>
       <a href="login">Already have a user?</a><br>
       <button>Register</button>
