@@ -29,3 +29,22 @@ def validate_user_registration_data(email, username, password, confirmation, cre
         return "Invalid direction"
 
     return ""
+
+def filter_search(films, args):
+    title = args.get('title')
+
+    films_filtered = [
+        film for film in films
+        if title in film['titulo'].lower()
+    ]
+    if args.get('category') != 'All':
+        films_filtered = [
+            film for film in films_filtered
+            if film['categoria'] == args.get('category')
+        ]
+
+    return films_filtered
+
+def get_categories(films):
+    categories_set = {film['categoria'] for film in films}
+    return ['All'] + list(categories_set)

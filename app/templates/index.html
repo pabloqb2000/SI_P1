@@ -11,13 +11,13 @@
     <div class="side-menu">
       <h1 class="side-menu-title">Search</h1>
       <div class="search-container">
-        <form action="index">
-          <input type="text" placeholder="Type here..." name="search">
+        <form action="index" method="GET">
+          <input type="text" placeholder="Type here..." name="title" id="title" {% if values %}value="{{ values.title }}"{% endif %}>
           <button type="submit"><i class="fa fa-search"></i></button>
-          <select name="categories" id="category">
-            <option value="all">All</option>
-            <option value="humor">Humor</option>
-            <option value="action">Action</option>
+          <select name="category" id="category">
+            {% for category in categories %}
+              <option value="{{ category }}" {% if values and category==values.category %}selected="selected"{% endif %}>{{ category }}</option>
+            {% endfor %}
           </select>
         </form>
       </div>

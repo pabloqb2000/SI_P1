@@ -17,11 +17,17 @@ def index():
     catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
     catalogue = json.loads(catalogue_data)
     films = catalogue['peliculas']
+    categories = get_categories(films)
 
+    values=None
     if request.args:
         films = filter_search(films, request.args)
+        values = {
+            'title': request.args.get('title'),
+            'category': request.args.get('category').title(),
+        }
 
-    return render_template('index.html', title = "Home", films=films)
+    return render_template('index.html', title = "Home", films=films, categories=categories, values=values)
     
 @app.route('/login', methods=['GET', 'POST'])
 def login():
