@@ -12,18 +12,45 @@ body {
   outline: none;
 }
 
-iframe {
+.error_content {
+  color: white;
+  text-align: center;
+  padding-bottom: 100px;
+  flex-grow: 1; 
+  overflow: auto;
+}
+
+.error_content h1 {
+  padding: 20px 0px;
+  margin: 180px 0px;
+  font-size: 52px;
+}
+
+.error_content a {
+  text-decoration: none;
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  padding: 20px 0px;
+  margin: 100px 0px;
+}
+
+.error_content a:hover {
+  color: #ebebeb;
+}
+
+.basebar {
   width: 100%;
   margin: 0;
   padding: 0;
   border: none;
 }
 
-iframe.header {
+.basebar header {
   height: 61px;
 }
 
-iframe.footer {
+.basebar.footer {
   height: 61px;
   margin-top: auto;
 }
@@ -86,6 +113,7 @@ iframe.footer {
 .navbar {
   overflow: hidden;
   background-color: #ebebeb;
+  height: 61px;
 }
 
 .navbar h1 {
@@ -295,14 +323,14 @@ iframe.footer {
   font-size: 18px;
 }
 
-.form-div input[type="text"] {
+.form-div input[type="text"], .form-div input[type="password"] {
   border: none;
   font-size: 18px;
   padding: 6px 6px;
   border-radius: 4px;
 }
 
-.form-div input[type="text"]:hover {
+.form-div input[type="text"]:hover, .form-div input[type="password"]:hover {
   background-color: rgb(230, 230, 230);
 }
 
@@ -438,5 +466,6 @@ iframe.footer {
 .history-film h1{
   display: inline-block;
 }
+
 
 

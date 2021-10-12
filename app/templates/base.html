@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %} {% endblock %}- Webflix</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style/style.css') }}/>
+  <script type="text/javascript" src={{ url_for('static', filename='scripts/script.js') }}></script>
+</head>
+
+<body>
+  <div class="basebar">
+    <header>
+      <div class="navbar">
+        <h1><a href={{ url_for('index') }}>Webflix</a></h1>
+        <a class="active" href="login">Login / Register</a>
+        <a href="cart"><i class="fa fa-shopping-cart"></i></a>
+        <a href="history"><i class=fas fa-user-astronaut style='font-size:48px; color: black' ></i></a>
+      </div>
+    </header>
+  </div>
+  
+  {% block content%} {% endblock %}
+
+  <div class="basebar">
+    <footer>
+      <div class="footer-content">
+        <p class="footer-links">
+          By <a href="https://github.com/pabloqb2000">pabloqb2000</a> & <a href="https://github.com/pattersonq">pattersonq</a> | 
+          <a href="#">Coockie policy</a> | <a href="#">Privacy policy</a>
+        </p>
+      </div>
+    </footer>
+  </div>
+</body>
+
+</html>

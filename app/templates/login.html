@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+{% extends "base.html" %}
 
-<iframe src="header.html" title="Header" scrolling="no" class="header"></iframe>
+{% block title %}
+    {{ title }}
+{% endblock%}
 
+
+{% block content %}
 <div class="form-content">
   <div class="form-div">
     <form action="/action_page.php">
@@ -18,13 +16,9 @@
         <label for="password"><h3>Password</h5></label>
         <input type="text" placeholder="password" name="password" id="password">
       </div>
-      <a href="register.html">Don't have a user?</a><br>
+      <a href="register">Don't have a user?</a><br>
       <button>Login</button>
     </form>
   </div>
 </div>
-
-<iframe src="footer.html" title="Footer" scrolling="no" class="footer"></iframe>
-
-</body>
-</html>
+{% endblock %}

@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+{% extends "base.html" %}
 
-<iframe src="header.html" title="Header" scrolling="no" class="header"></iframe>
+{% block title %}
+    {{ title }}
+{% endblock%}
 
+
+{% block content %}
 <div class="main-row">
     <div class="side-menu">
         <h1 class="side-menu-title">Search</h1>
@@ -26,8 +24,8 @@
 
     <div class="user-preview">
         <div class="user-image">
-            <a href="imgs/user.png">
-            <img src="imgs/user.png" alt="User image">
+            <a href={{ url_for('static', filename='imgs/user.png') }}>
+            <img src={{ url_for('static', filename='imgs/user.png') }} alt="User image">
             </a>
         </div>
         <div class="user-info">
@@ -42,15 +40,11 @@
         <h1 class="content-title">Your Profile</h1>
         <h3>Purchase history</h3>
             <div class="history-film" style="height: 200px;">
-                <a href="film.html">
-                    <img src="imgs/Orgazmo.jpg" alt="Film image">
+                <a href={{ url_for('film', film_id=1) }}>
+                    <img src={{ url_for('static', filename='imgs/Orgazmo.jpg') }} alt="Film image">
                     <h1 style="text-align: center;">Orgazmo</h1>
                 </a>
             </div>
     </div>
 </div>
-
-<iframe src="footer.html" title="Footer" scrolling="no" class="footer"></iframe>
-
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock%}
+
+
+{% block content %}
+  <div class="main-row">
+
+    <div class="side-menu" style="width: 30%;"> <!-- Inline style to override CSS value -->
+      <h1 class="side-menu-title">{{ film.titulo }}</h1>
+      <p class="film-description">
+          <strong>Director</strong>: {{ film.director }} <br>
+          <strong>Year</strong>: {{ film.año }} <br>
+          <strong>Price</strong>: {{ film.precio }} €<br>
+          <strong>Actors</strong>: <br>
+            {% for actor in film.actores %}
+              {{ actor.nombre }} - {{ actor.personaje }} <br>
+            {% endfor %}
+      </p>
+      <button class="side-menu-btn">Add to cart</button>
+    </div>
+
+    <div class="content">
+      <img src={{ url_for('static', filename=film.poster) }} alt="Film image" class="film-image">
+    </div>
+  </div>
+{% endblock %}

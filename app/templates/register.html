@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+{% extends "base.html" %}
 
-<iframe src="header.html" title="Header" scrolling="no" class="header"></iframe>
+{% block title %}
+    {{ title }}
+{% endblock%}
 
+
+{% block content %}
 <div class="form-content">
   <div class="form-div">
     <form action="/action_page.php">
@@ -18,17 +16,17 @@
         <label for="username"><h3>Username</h5></label>
         <input type="text" placeholder="username" name="username" id="username">
         <label for="password"><h3>Password</h5></label>
-        <input type="text" placeholder="password" name="password" id="password">
+        <input type="password" placeholder="password" name="password" id="password">
+        <label for="confirmation"><h3>Confirm Password</h5></label>
+        <input type="password" placeholder="password" name="confirmation" id="confirmation">
         <label for="credit-card"><h3>Credit card</h5></label>
         <input type="text" placeholder="ES00-0000-0000-0000" name="credit-card" id="credit-card">
+        <label for="direction"><h3>Direction</h5></label>
+        <input type="text" placeholder="C/Francisco Tomás y Valiente, 11" name="direction" id="direction">
       </div>
-      <a href="login.html">Already have a user?</a><br>
+      <a href="login">Already have a user?</a><br>
       <button>Register</button>
     </form>
   </div>
 </div>
-
-<iframe src="footer.html" title="Footer" scrolling="no" class="footer"></iframe>
-
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,36 @@
+{ "peliculas": 
+  [ 
+    { 
+			"id": 1,
+			"titulo": "Orgazmo",
+      "poster": "imgs/Orgazmo.jpg",
+      "director": "Pedro Sanchez",
+      "precio": 4.20,
+      "categoria": "Aventura",
+      "año": 1420,
+      "actores": 
+      [
+        { "nombre": "Jake Lloyd",
+          "personaje": "Anakin Skywalker",
+          "foto": "imgs/user.png"
+        }
+      ]
+    },
+    { 
+			"id": 2,
+			"titulo": "Orgazmo 2",
+      "poster": "imgs/Orgazmo.jpg",
+      "director": "Pablo Quintanilla",
+      "precio": 69.69,
+      "categoria": "Humor",
+      "año": 1969,
+      "actores": 
+      [
+        { "nombre": "Jake Lloyd",
+          "personaje": "Anakin Skywalker",
+          "foto": "imgs/user.png"
+        }
+      ]
+    }
+  ]
+}
