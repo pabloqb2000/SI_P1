@@ -67,7 +67,7 @@ def login():
                 user=request.cookies.get('username')
             )
     else:
-        if not session['last_url']:
+        if "last_url" not in session:
             session['last_url'] = request.referrer
             session.modified = True
         return render_template('login.html', user=request.cookies.get('username'))
@@ -210,7 +210,7 @@ def logout():
 
 @app.route('/random_number', methods=['GET', 'POST'])
 def random_number():
-    return random.randint(0, 100)
+    return str(random.randint(0, 100))
 
 @app.errorhandler(404)
 def page_not_found(error):

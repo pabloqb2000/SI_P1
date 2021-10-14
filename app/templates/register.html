@@ -12,35 +12,61 @@
       <div class="form-inputs">
         <h1>Register</h1>
         {% if error_msg %} <p>{{ error_msg }}</p> {% endif %}
-        <div class="form-input">
-          <label for="email"><h3>Email</h3></label>
-          <input type="text" placeholder="marianorajoy@mimail.es" name="email" id="email" value="{{ values.email }}">
+        <label for="email">
+          <h2>Email</h2>
+        </label>
+        <input type="text" placeholder="marianorajoy@mimail.es" name="email" id="email">
+        <div id="email_popup" class="pwd_popup">
+          <h5>You must enter a valid email.</h5>
         </div>
-        <div class="form-input">
-          <label for="username"><h3>Username</h3></label>
-          <input type="text" placeholder="username" name="username" id="username" value="{{ values.username }}">
+        <label for="username">
+          <h2>Username</h2>
+        </label>
+        <input type="text" placeholder="username" name="username" id="username">
+        <div id="user_popup" class="pwd_popup">
+          <h5>Username must be 6 characters long, <br> without spaces or special characters.</h5>
         </div>
-        <hr>
-        <div class="form-input">
-          <label for="password"><h3>Password</h3></label>
-          <input type="password" placeholder="password" name="password" id="password">
+        <label for="password">
+          <h2>Password</h2>
+        </label>
+        <input type="password" placeholder="password" name="password" id="password">
+        <div id="pswd_info">
+          <h4>Password will be stronger if it meets the following requirements:</h4>
+          <ul>              
+              <li id="letter" class="invalid">At least <strong>one letter</strong></li>
+              <li id="capital" class="invalid">At least <strong>one capital letter</strong></li>
+              <li id="number" class="invalid">At least <strong>one number</strong></li>
+              <li id="length" class="invalid">Be at least <strong>8 characters</strong></li>
+          </ul>
+          <label for="file" style="text-align: center;">Password strength:</label><br>
+          <div id="progress">
+            <div id="progress_bar">0%</div>
+          </div>
         </div>
-        <div class="form-input">
-          <label for="confirmation"><h3>Confirm Password</h3></label>
-          <input type="password" placeholder="password" name="confirmation" id="confirmation">
+        <label for="confirmation">
+          <h2>Confirm Password</h2>
+        </label>
+        <input type="password" placeholder="password" name="confirmation" id="confirmation">
+        <div id="cfm_popup" class="pwd_popup">
+          <h5>Passwords should match.</h5>
         </div>
-        <hr>
-        <div class="form-input">
-          <label for="creditcard"><h3>Credit card</h3></label>
-          <input type="text" placeholder="0000-0000-0000-0000" name="creditcard" id="creditcard" value="{{ values.creditcard }}">
+        <label for="credit-card">
+          <h2>Credit card</h2>
+        </label>
+        <input type="text" placeholder="ES00-0000-0000-0000" name="credit-card" id="creditcard">
+        <div id="card_popup" class="pwd_popup">
+          <h5>Credit card number must be 16 digits long.</h5>
         </div>
-        <div class="form-input">
-          <label for="direction"><h3>Direction</h3></label>
-          <input type="text" placeholder="C/Francisco Tomás y Valiente, 11" name="direction" id="direction" value="{{ values.direction }}">
+        <label for="direction">
+          <h2>Direction</h2>
+        </label>
+        <input type="text" placeholder="ES00-0000-0000-0000" name="direction" id="direction">
+        <div id="dir_popup" class="pwd_popup">
+          <h5>Adress must be 50 characters or shorter.</h5>
         </div>
-        <a href="{{ url_for('login') }}">Already have a user?</a><br>
-        <input type="submit" value="Register">
       </div>
+      <a href="login">Already have a user?</a><br>
+      <button>Register</button>
     </form>
   </div>
 </div>

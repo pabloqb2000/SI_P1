@@ -318,6 +318,11 @@ body {
   margin-top: 14px;
 }
 
+.form-inputs h2 {
+  text-align: center;
+  font-size: medium;
+}
+
 .form-div {
   background-color: #ebebeb;
   border-radius: 8px;
@@ -527,6 +532,58 @@ body {
 .history-film h1{
   display: inline-block;
 }
+
+.pwd_popup{
+  display: none;
+  background-color: grey;
+  color: red;
+}
+
+#pswd_info {
+  display: none;
+  width:250px;
+  padding:15px;
+  background:#fefefe;
+  font-size:.875em;
+  border-radius:5px;
+  box-shadow:0 1px 3px #ccc;
+  border:1px solid #ddd;
+}
+
+#pswd_info h4 {
+  width: 240px;
+  text-align: center;
+}
+
+.invalid {
+  background:url(../images/invalid.png) no-repeat 0 50%;
+  padding-left:22px;
+  line-height:24px;
+  color:#ec3f41;
+}
+.valid {
+  background:url(../images/valid.png) no-repeat 0 50%;
+  padding-left:22px;
+  line-height:24px;
+  color:#3a7d34;
+}
+
+#progress_bar {
+  width: 0%;
+  height: 30px;
+  background-color: #04AA6D;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+
+#users{
+  color: black;
+  width: fit-content;
+  float: right;
+}
+
+
 
 
 
