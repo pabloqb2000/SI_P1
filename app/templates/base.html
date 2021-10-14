@@ -15,9 +15,9 @@
     <header>
       <div class="navbar">
         <h1><a href={{ url_for('index') }}>Webflix</a></h1>
-        <a class="active" href="/login">Login / Register</a>
-        <a href="/cart"><i class="fa fa-shopping-cart"></i></a>
-        <a href="/history"><i class="fa fa-user"></i></a>
+        <a class="active" href="{{ url_for('login') }}">Login / Register</a>
+        <a href="{{ url_for('cart') }}"><i class="fa fa-shopping-cart"></i></a>
+        <a href="{{ url_for('history') }}"><i class="fa fa-user"></i></a>
       </div>
     </header>
   </div>

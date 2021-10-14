@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from app import app
-from flask import render_template, request, url_for, redirect, session, abort
+from flask import render_template, request, url_for, redirect, session, abort, make_response
 import json
 import os
 from os import path
@@ -38,7 +38,7 @@ def index():
 def login():
     if 'username' in request.form and request.form['username']:
         username = request.form['username']
-        base_dir = path.join(path.dirname(path.abspath(__file__)), 'usuarios', username)
+        base_dir = path.join(app.root_path, 'usuarios', username)
 
         if os.path.isdir(base_dir):
             user_data = json.load(open(path.join(base_dir, 'datos.dat')))
@@ -50,48 +50,44 @@ def login():
                 session['last_url'] = ''
                 session['user'] = username
                 session.modified = True
-                return redirect(last_url)
+
+                resp = make_response(redirect(last_url))
+                resp.set_cookie('username', username)
+                return resp
             else:
                 return render_template(
                     'login.html', 
-                    title="Login", 
                     error_msg=f"Invalid password for {username}",
-                    user=username
+                    user=request.cookies.get('username')
                 )
-
         else:
             return render_template(
                 'login.html', 
-                title="Login", 
                 error_msg="User is not registered",
-                user=username
+                user=request.cookies.get('username')
             )
     else:
         if not session['last_url']:
             session['last_url'] = request.referrer
             session.modified = True
-        return render_template('login.html', title='Login')
+        return render_template('login.html', user=request.cookies.get('username'))
 
 @app.route('/add-to-cart', methods=['POST'])
 def add_to_cart():
-    if 'user' in session:
-        if 'film-id' in request.form:
-            if 'films' in session:
-                session['films'].append(request.form['film-id'])
-                session.modified = True
-            else:
-                session['films'] = [request.form['film-id']]
-                session.modified = True
-            return redirect(url_for('cart'))
+    if 'film-id' in request.form:
+        if 'films' in session:
+            session['films'].append(request.form['film-id'])
+            session.modified = True
         else:
-            return redirect(request.referrer)
+            session['films'] = [request.form['film-id']]
+            session.modified = True
+        return redirect(url_for('cart'))
     else:
-        return render_template('login.html', title='Login', error_msg="You need to be logged in to buy films!")
+        return redirect(request.referrer)
 
 @app.route('/remove-from-cart', methods=['POST'])
 def remove_from_cart():
     if 'film-index' in request.form and \
-       'user' in session and \
        'films' in session and \
        request.form['film-index'].isdigit() and \
        len(session['films']) > int(request.form['film-index']):
@@ -105,38 +101,33 @@ def remove_from_cart():
 @app.route('/history')
 def history():
     if 'user' in session:        
-        user_data = json.load(open(path.join(path.dirname(path.abspath(__file__)), 'usuarios', session['user'], 'datos.dat')))
+        user_data = json.load(open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat')))
 
-        return render_template('history.html', title='Profile', user=user_data)
+        return render_template('history.html', user=user_data)
     else:
         session['last_url'] = url_for('history')
         session.modified = True
-        return render_template('login.html', title='Login', error_msg="You need to be logged in to access this page!")
+        return render_template('login.html', error_msg="You need to be logged in to access this page!", user=request.cookies.get('username'))
 
 @app.route('/cart')
 def cart():
-    if 'user' in session:  
-        catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
-        catalogue = json.loads(catalogue_data)
-        films_by_id = {str(film['id']): film for film in catalogue['peliculas']}
+    catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
+    catalogue = json.loads(catalogue_data)
+    films_by_id = {str(film['id']): film for film in catalogue['peliculas']}
 
-        if 'films' in session:
-            films = [films_by_id[film_id] for film_id in session['films']]
-        else:
-            films = []
-
-        total = round(sum([film['precio'] for film in films]), 2)
-        return render_template(
-            'cart.html',
-            title = "Cart", 
-            any_film=len(films)>0, 
-            films_in_chart=films, 
-            total=total
-        )
+    if 'films' in session:
+        films = [films_by_id[film_id] for film_id in session['films']]
     else:
-        session['last_url'] = url_for('cart')
-        session.modified = True
-        return render_template('login.html', title='Login', error_msg="You need to be logged in to access this page!")
+        films = []
+
+    total = round(sum([film['precio'] for film in films]), 2)
+    return render_template(
+        'cart.html',
+        title = "Cart", 
+        any_film=len(films)>0, 
+        films_in_chart=films, 
+        total=total
+    )
 
 @app.route('/film/<int:film_id>')
 def film(film_id):
@@ -154,17 +145,17 @@ def film(film_id):
     if not film:
         abort(404)
 
-    return render_template('film.html', title=film['titulo'], film=film)
+    return render_template('film.html', film=film)
 
 @app.route('/register', methods=['GET'])
-def regiter():
+def register():
     user_data = {
         'email': '',
         'username': '',
         'creditcard': '',
         'direction': '',
     }
-    return render_template('register.html', title='Register', values=user_data)
+    return render_template('register.html', values=user_data)
 
 @app.route('/register', methods=['POST'])
 def register_post():
@@ -191,16 +182,16 @@ def register_post():
     }
     validation_msg = validate_user_registration_data(email, username, password, confirmation, creditcard, direction)
     if validation_msg:
-        return render_template('register.html', title='Register', error_msg=validation_msg, values=user_data)
+        return render_template('register.html', error_msg=validation_msg, values=user_data)
 
     # Check if username already exists
-    base_dir = path.join(path.dirname(path.abspath(__file__)), 'usuarios')
+    base_dir = path.join(app.root_path, 'usuarios')
     other_users = [
         name for name in os.listdir(base_dir) 
         if path.isdir(os.path.join(base_dir, name))
     ]
     if username in other_users:
-        return render_template('register.html', title='Register', error_msg='Username is already in use!', values=user_data)
+        return render_template('register.html', error_msg='Username is already in use!', values=user_data)
         return redirect(url_for('index'))
 
     # Create a new user file
@@ -217,6 +208,10 @@ def logout():
     session.pop('films', None)
     return redirect(url_for('index'))
 
+@app.route('/random_number', methods=['GET', 'POST'])
+def random_number():
+    return random.randint(0, 100)
+
 @app.errorhandler(404)
 def page_not_found(error):
-   return render_template('404.html', title = '404'), 404
+   return render_template('404.html'), 404

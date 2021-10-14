@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ title }}
+    Cart
 {% endblock%}
 
 
@@ -20,7 +20,9 @@
         <p class="checkout-content">
             <strong>Total</strong>: {{ total }} €
         </p>
-        <button class="side-menu-btn">Buy</button>
+        <form action="buy" method="POST">
+          <input type="submit" value="Buy" class="side-menu-btn">
+        </form>
       {% else %}
         <h3 class="medium-title">No films in the cart!</h3>
       {% endif %}
@@ -53,7 +55,7 @@
       {% else %}
         <h3 class="medium-title">No films in the cart!</h3>
         <div class="center-div">
-          <a href="/index" class="button-link">Get back to main page</a>
+          <a href="{{ url_for('index') }}" class="button-link">Get back to main page</a>
         </div>
       {% endif %}
     </div>
