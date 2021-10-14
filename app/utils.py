@@ -1,4 +1,6 @@
 import re
+import hashlib
+import random
 
 def validate_user_registration_data(email, username, password, confirmation, creditcard, direction):
     if not email or \
@@ -48,3 +50,17 @@ def filter_search(films, args):
 def get_categories(films):
     categories_set = {film['categoria'] for film in films}
     return ['All'] + list(categories_set)
+
+def generate_salt_and_pwd(password):
+
+    salt = "".join([
+        random.choice("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        for _ in range(16)
+    ])
+
+    password_hash = hashlib.blake2b((salt+password).encode('utf-8')).hexdigest()
+
+    return salt, password_hash
+
+def hash_password(salt, password):
+    return hashlib.blake2b((salt+password).encode('utf-8')).hexdigest()

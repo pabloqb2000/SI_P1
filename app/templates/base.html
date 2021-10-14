@@ -6,6 +6,7 @@
   <title>{% block title %} {% endblock %}- Webflix</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style/style.css') }}/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src={{ url_for('static', filename='scripts/script.js') }}></script>
 </head>
 
@@ -14,9 +15,9 @@
     <header>
       <div class="navbar">
         <h1><a href={{ url_for('index') }}>Webflix</a></h1>
-        <a class="active" href="login">Login / Register</a>
-        <a href="cart"><i class="fa fa-shopping-cart"></i></a>
-        <a href="history"><i class=fas fa-user-astronaut style='font-size:48px; color: black' ></i></a>
+        <a class="active" href="/login">Login / Register</a>
+        <a href="/cart"><i class="fa fa-shopping-cart"></i></a>
+        <a href="/history"><i class="fa fa-user"></i></a>
       </div>
     </header>
   </div>

@@ -6,7 +6,6 @@ from flask import render_template, request, url_for, redirect, session, abort
 import json
 import os
 from os import path
-import hashlib
 import random
 import sys
 from app.utils import *
@@ -27,28 +26,120 @@ def index():
             'category': request.args.get('category').title(),
         }
 
-    return render_template('index.html', title = "Home", films=films, categories=categories, values=values)
+    return render_template(
+        'index.html',
+        title = "Home", 
+        films=films, 
+        categories=categories, 
+        values=values
+    )
     
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html', title='Login')
+    if 'username' in request.form and request.form['username']:
+        username = request.form['username']
+        base_dir = path.join(path.dirname(path.abspath(__file__)), 'usuarios', username)
+
+        if os.path.isdir(base_dir):
+            user_data = json.load(open(path.join(base_dir, 'datos.dat')))
+            password_hash = hash_password(user_data['salt'], request.form['password'])
+
+            if user_data['username'] == username and \
+               user_data['password'] == password_hash:
+                last_url = session['last_url']
+                session['last_url'] = ''
+                session['user'] = username
+                session.modified = True
+                return redirect(last_url)
+            else:
+                return render_template(
+                    'login.html', 
+                    title="Login", 
+                    error_msg=f"Invalid password for {username}",
+                    user=username
+                )
+
+        else:
+            return render_template(
+                'login.html', 
+                title="Login", 
+                error_msg="User is not registered",
+                user=username
+            )
+    else:
+        if not session['last_url']:
+            session['last_url'] = request.referrer
+            session.modified = True
+        return render_template('login.html', title='Login')
+
+@app.route('/add-to-cart', methods=['POST'])
+def add_to_cart():
+    if 'user' in session:
+        if 'film-id' in request.form:
+            if 'films' in session:
+                session['films'].append(request.form['film-id'])
+                session.modified = True
+            else:
+                session['films'] = [request.form['film-id']]
+                session.modified = True
+            return redirect(url_for('cart'))
+        else:
+            return redirect(request.referrer)
+    else:
+        return render_template('login.html', title='Login', error_msg="You need to be logged in to buy films!")
+
+@app.route('/remove-from-cart', methods=['POST'])
+def remove_from_cart():
+    if 'film-index' in request.form and \
+       'user' in session and \
+       'films' in session and \
+       request.form['film-index'].isdigit() and \
+       len(session['films']) > int(request.form['film-index']):
+
+        session['films'].pop(int(request.form['film-index']))
+        session.modified = True
+        return redirect(url_for('cart'))
+    else:
+        return redirect(request.referrer)
 
 @app.route('/history')
 def history():
-    return render_template('history.html', title='History')
+    if 'user' in session:        
+        user_data = json.load(open(path.join(path.dirname(path.abspath(__file__)), 'usuarios', session['user'], 'datos.dat')))
+
+        return render_template('history.html', title='Profile', user=user_data)
+    else:
+        session['last_url'] = url_for('history')
+        session.modified = True
+        return render_template('login.html', title='Login', error_msg="You need to be logged in to access this page!")
 
 @app.route('/cart')
 def cart():
-    catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
-    catalogue = json.loads(catalogue_data)
-    films = catalogue['peliculas']*3
-    total = sum([film['precio'] for film in films])
-    return render_template('cart.html', title = "Cart", films_in_chart=films, total=total)
+    if 'user' in session:  
+        catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
+        catalogue = json.loads(catalogue_data)
+        films_by_id = {str(film['id']): film for film in catalogue['peliculas']}
+
+        if 'films' in session:
+            films = [films_by_id[film_id] for film_id in session['films']]
+        else:
+            films = []
+
+        total = round(sum([film['precio'] for film in films]), 2)
+        return render_template(
+            'cart.html',
+            title = "Cart", 
+            any_film=len(films)>0, 
+            films_in_chart=films, 
+            total=total
+        )
+    else:
+        session['last_url'] = url_for('cart')
+        session.modified = True
+        return render_template('login.html', title='Login', error_msg="You need to be logged in to access this page!")
 
 @app.route('/film/<int:film_id>')
 def film(film_id):
-    
-    print("ID:  ", film_id)
     catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
     catalogue = json.loads(catalogue_data)
 
@@ -86,16 +177,7 @@ def register_post():
     direction = request.form.get('direction')
 
     # Encode password and generate salt
-    ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    chars=[]
-    for i in range(16):
-        chars.append(random.choice(ALPHABET))
-
-    salt = "".join([
-        random.choice("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-        for _ in range(16)
-    ])
-    password_hash = hashlib.blake2b((salt+password).encode('utf-8')).hexdigest()
+    salt, password_hash = generate_salt_and_pwd(password)
 
     # Validate user data
     user_data = {
@@ -131,7 +213,8 @@ def register_post():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    session.pop('usuario', None)
+    session.pop('user', None)
+    session.pop('films', None)
     return redirect(url_for('index'))
 
 @app.errorhandler(404)

@@ -19,7 +19,10 @@
               {{ actor.nombre }} - {{ actor.personaje }} <br>
             {% endfor %}
       </p>
-      <button class="side-menu-btn">Add to cart</button>
+      <form action="/add-to-cart" method="POST">
+        <input type="hidden" value="{{ film.id }}" name="film-id" id="film-id">
+        <input type="submit" value="Add to cart" class="side-menu-btn">
+      </form>
     </div>
 
     <div class="content">

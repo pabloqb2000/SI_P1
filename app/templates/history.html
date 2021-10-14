@@ -1,50 +1,43 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ title }}
+  {{ title }}
 {% endblock%}
 
 
 {% block content %}
 <div class="main-row">
-    <div class="side-menu">
-        <h1 class="side-menu-title">Search</h1>
-        <div class="search-container">
-        <form action="/action_page.php">
-            <input type="text" placeholder="Type here..." name="search">
-            <button type="submit"><i class="fa fa-search"></i></button>
-            <select name="categories" id="category">
-            <option value="all">All</option>
-            <option value="humor">Humor</option>
-            <option value="action">Action</option>
-            </select>
-        </form>
-        </div>
-    </div>
-
+  <div class="side-menu" style="width: 30%;">
+    <!-- Inline style to override CSS value -->
+    <h1 class="side-menu-title">Profile</h1>
     <div class="user-preview">
-        <div class="user-image">
-            <a href={{ url_for('static', filename='imgs/user.png') }}>
-            <img src={{ url_for('static', filename='imgs/user.png') }} alt="User image">
-            </a>
+      <div class="user-image">
+        <a href={{ url_for('static', filename='imgs/user.png' ) }}>
+          <img src={{ url_for('static', filename='imgs/user.png' ) }} alt="User image">
+        </a>
+      </div>
+      <div class="user-info">
+        <h1 class="user-name">{{ user.username }}</h1>
+        <h3>Email: {{ user.email }}</h3>
+        <h3>Creditcard: {{ user.creditcard }}</h3>
+        <h3>Direction: {{ user.direction }}</h3>
+        <h3>Balance: {{ user.balance }}</h3>
+        <div class="center-div">
+          <a class="logout button-link" href="/logout">logout</a>
         </div>
-        <div class="user-info">
-            <h1 class="user-name">Pepe Comepinga</h1>
-        </div>
-        <div class="user-money">
-            <h3>Saldo: 420.69 $</h2>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="content">
-        <h1 class="content-title">Your Profile</h1>
-        <h3>Purchase history</h3>
-            <div class="history-film" style="height: 200px;">
-                <a href={{ url_for('film', film_id=1) }}>
-                    <img src={{ url_for('static', filename='imgs/Orgazmo.jpg') }} alt="Film image">
-                    <h1 style="text-align: center;">Orgazmo</h1>
-                </a>
-            </div>
+  <div class="content">
+    <h1 class="content-title">History</h1>
+    <h3>Purchase history</h3>
+    <div class="history-film" style="height: 200px;">
+      <a href={{ url_for('film', film_id=1) }}>
+        <img src={{ url_for('static', filename='imgs/Orgazmo.jpg' ) }} alt="Film image">
+        <h1 style="text-align: center;">Orgazmo</h1>
+      </a>
     </div>
+  </div>
 </div>
 {% endblock %}
