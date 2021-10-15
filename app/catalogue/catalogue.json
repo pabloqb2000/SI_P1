@@ -31,6 +31,86 @@
           "foto": "imgs/user.png"
         }
       ]
+    },
+    { 
+			"id": 3,
+			"titulo": "TED",
+      "poster": "imgs/Ted.jpg",
+      "director": "Andrés Iniesta",
+      "precio": 1,
+      "categoria": "Terror",
+      "año": 1969,
+      "actores": 
+      [
+        { "nombre": "Jake Lloyd",
+          "personaje": "Anakin Skywalker",
+          "foto": "imgs/user.png"
+        }
+      ]
+    },
+    { 
+			"id": 4,
+			"titulo": "Ali G",
+      "poster": "imgs/AliG.jpg",
+      "director": "Andrés Iniesta",
+      "precio": 666,
+      "categoria": "Aventura",
+      "año": 1969,
+      "actores": 
+      [
+        { "nombre": "Jake Lloyd",
+          "personaje": "Anakin Skywalker",
+          "foto": "imgs/user.png"
+        }
+      ]
+    },
+    { 
+			"id": 5,
+			"titulo": "Shrek",
+      "poster": "imgs/Shrek.jpg",
+      "director": "Andrés Iniesta",
+      "precio": 13.69,
+      "categoria": "Terror",
+      "año": 1969,
+      "actores": 
+      [
+        { "nombre": "Jake Lloyd",
+          "personaje": "Anakin Skywalker",
+          "foto": "imgs/user.png"
+        }
+      ]
+    },
+    { 
+			"id": 6,
+			"titulo": "Shrek 2",
+      "poster": "imgs/Shrek.jpg",
+      "director": "Andrés Iniesta",
+      "precio": 9.69,
+      "categoria": "Terror",
+      "año": 1969,
+      "actores": 
+      [
+        { "nombre": "Jake Lloyd",
+          "personaje": "Anakin Skywalker",
+          "foto": "imgs/user.png"
+        }
+      ]
+    },
+    { 
+			"id": 7,
+			"titulo": "Shrek 3",
+      "poster": "imgs/Shrek.jpg",
+      "director": "Andrés Iniesta",
+      "precio": 6.69,
+      "categoria": "Terror",
+      "año": 1969,
+      "actores": 
+      [
+        { "nombre": "Jake Lloyd",
+          "personaje": "Anakin Skywalker",
+          "foto": "imgs/user.png"
+        }
+      ]
     }
   ]
 }

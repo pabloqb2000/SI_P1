@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style/style.css') }}/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script type="text/javascript" src={{ url_for('static', filename='scripts/script.js') }}></script>
+  <script src={{ url_for('static', filename='scripts/script.js') }}></script>
   <script src="http://code.jquery.com/jquery-1.7.min.js"></script>
 </head>
 
@@ -16,7 +16,11 @@
     <header>
       <div class="navbar">
         <h1><a href={{ url_for('index') }}>Webflix</a></h1>
+        {% if logged %}
+        <a class="active" href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
         <a class="active" href="{{ url_for('login') }}">Login / Register</a>
+        {% endif %}
         <a href="{{ url_for('cart') }}"><i class="fa fa-shopping-cart"></i></a>
         <a href="{{ url_for('history') }}"><i class="fa fa-user"></i></a>
         <h5 id="users">Users: 0</h5>

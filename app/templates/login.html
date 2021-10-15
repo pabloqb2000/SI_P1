@@ -11,7 +11,7 @@
     <form action="/login", method="POST">
       <div class="form-inputs">
         <h1>Login</h1>
-        {% if error_msg %} <p>{{ error_msg }}</p> {% endif %}
+        {% if error_msg %} <p class="error-msg">{{ error_msg }}</p> {% endif %}
         <div class="form-input">
           <label for="username"><h4>Username</h4></label>
           <input type="text" placeholder="username" name="username" id="username" {% if user %}value="{{ user }}"{% endif %}>

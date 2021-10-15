@@ -1,6 +1,17 @@
 window.onload = init;
 
 function init(){
+    const interval = setInterval(function(){
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+             document.getElementById("users").innerHTML = "Users: " + this.responseText;
+            }
+          };
+        xhttp.open("GET", "random_number");
+        xhttp.send();
+    }, 3000);
+
     var email_input = document.getElementById("email");
     var email_message = document.getElementById("email_popup");
 
@@ -107,17 +118,6 @@ function init(){
             dir_message.style.color = "red";
         }
     }
-
-    const interval = setInterval(function(){
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-             document.getElementById("users").innerHTML = "Users: " + this.responseText;
-            }
-          };
-        xhttp.open("GET", "random_number");
-        xhttp.send();
-    }, 3000);
 }
 
 $(document).ready(function() {

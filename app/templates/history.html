@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Profile
+Profile
 {% endblock%}
 
 
@@ -21,23 +21,47 @@
         <h3>Email: {{ user.email }}</h3>
         <h3>Creditcard: {{ user.creditcard }}</h3>
         <h3>Direction: {{ user.direction }}</h3>
-        <h3>Balance: {{ user.balance }}</h3>
+        <h3>Balance: {{ user.balance }}€</h3>
+        <h3>Points: {{ user.points }}</h3>
         <div class="center-div">
-          <a class="logout button-link" href="/logout">logout</a>
+          <a class="button-link" href="{{ url_for('add_money') }}">🤑 Add money 🤑</a>
         </div>
+      </div>
+      <div class="center-div">
       </div>
     </div>
   </div>
 
   <div class="content">
     <h1 class="content-title">History</h1>
-    <h3>Purchase history</h3>
-    <div class="history-film" style="height: 200px;">
-      <a href={{ url_for('film', film_id=1) }}>
-        <img src={{ url_for('static', filename='imgs/Orgazmo.jpg' ) }} alt="Film image">
-        <h1 style="text-align: center;">Orgazmo</h1>
-      </a>
+    {% if any_film %}
+    <div class="but-items">
+      {% for film in films_bought %}
+      <div class="buy-item">
+        <a href={{ url_for('film', film_id=film.id) }} class="item-content">
+          <img src={{ url_for('static', filename=film.poster) }} alt="Film image" class="item-image">
+          <div class="item-info">
+            <h1>{{ film.titulo }}</h1>
+            <p>
+              {{ film.director }}<br></p>
+            <p>
+              <strong>Price: </strong>+{{ film.precio }} €
+            </p>
+          </div>
+        </a>
+        <div class="amount-text">
+          <strong>Amount: {{ film.amount }}<br><br>
+            Date: {{ film.date }}</strong>
+        </div>
+      </div>
+      {% endfor %}
     </div>
+    {% else %}
+    <h3 class="medium-title">No films bought!</h3>
+    <div class="center-div">
+      <a href="{{ url_for('index') }}" class="button-link">Get back to main page</a>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

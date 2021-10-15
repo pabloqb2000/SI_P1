@@ -230,9 +230,9 @@ body {
   padding: 20px 20px;
   background-color: rgb(28, 31, 48);
   border-radius: 8px;
-  width: fit-content;
   margin: 16px 16px;
   color: white;
+  width: 150px;
 }
 
 .film:hover {
@@ -250,12 +250,12 @@ body {
 }
 
 .film .film-img {
-    width: fit-content;
+  width: 150px;
 }
 
 .film .film-img img {
-    width: 150px;
-    border-radius: 4px;
+  width: 150px;
+  border-radius: 4px;
 }
 
 
@@ -357,6 +357,7 @@ body {
   padding: 6px 6px;
   border-radius: 4px;
   margin-left: 12px;
+  padding-right: 100px;
 }
 
 .form-div input[type="text"]:hover, .form-div input[type="password"]:hover {
@@ -367,7 +368,7 @@ body {
   padding: 8px 10px;
   border: none;
   display: block;
-  margin-top: 0px;
+  margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
   background-color: #2196F3;
@@ -385,14 +386,14 @@ body {
   color: white;
 }
 
-.form-div p {
+.error-msg {
   text-align: center;
   color: red;
   font-size: 17px;
 }
 
 .form-inputs a {
-  margin-top: 20px;
+  margin-top: 16px;
   display: block;
   margin-left: 20px;
   text-decoration: none;
@@ -424,12 +425,22 @@ body {
   display: flex;
 }
 
+.amount-text {
+  margin-right: 16px;
+  display: flex;
+}
+
+.amount-text strong {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .item-content {
   text-decoration: none;
   color: white;
   display: flex;
   flex-direction: row;
-  width: 92%;
+  width: 100%;
 }
 
 .item-content:hover {
@@ -581,9 +592,17 @@ body {
   color: black;
   width: fit-content;
   float: right;
+  margin-right: 12px;
 }
 
+.text-center {
+  text-align: center;
+}
 
+.film-checkout {
+  display: flex;
+}
 
-
-
+.amount-checkout {
+  margin-left: auto;
+}
