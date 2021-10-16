@@ -56,7 +56,7 @@ Cart
         <div class="amount-text">
           {% if film.amount > 1 %}<strong>Amount: {{ film.amount }}</strong>{% endif %}
         </div>
-        <form action="/remove-from-cart" method="post">
+        <form action="{{ url_for('remove_from_cart') }}" method="post">
           <input type="hidden" value="{{ film.id }}" name="filmid" id="filmid">
           <button type="submit"><i class="fa fa-times"></i></button>
         </form>

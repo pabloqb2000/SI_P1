@@ -145,10 +145,8 @@ def film(film_id):
 
     film = None
     for f in catalogue['peliculas']:
-        print(type(f['id']), type(film_id))
         if f['id'] == film_id:
             film = f
-            print(film)
             break
     
     if not film:
@@ -175,7 +173,6 @@ def register_post():
     confirmation = request.values.get('confirmation')
     creditcard = request.values.get('creditcard')
     direction = request.values.get('direction')
-    print(email, username, password, confirmation, creditcard, direction)
 
     # Encode password and generate salt
     salt, password_hash = generate_salt_and_pwd(password)

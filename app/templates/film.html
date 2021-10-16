@@ -12,14 +12,14 @@
       <h1 class="side-menu-title">{{ film.titulo }}</h1>
       <p class="film-description">
           <strong>Director</strong>: {{ film.director }} <br>
-          <strong>Year</strong>: {{ film.año }} <br>
+          <strong>Year</strong>: {{ film.anno }} <br>
           <strong>Price</strong>: {{ film.precio }} €<br>
           <strong>Actors</strong>: <br>
             {% for actor in film.actores %}
               {{ actor.nombre }} - {{ actor.personaje }} <br>
             {% endfor %}
       </p>
-      <form action="/add-to-cart" method="post">
+      <form action="{{ url_for('add_to_cart') }}" method="post">
         <input type="hidden" value="{{ film.id }}" name="film-id" id="film-id">
         <input type="submit" value="Add to cart" class="side-menu-btn">
       </form>

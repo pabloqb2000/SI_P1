@@ -7,7 +7,7 @@
       "director": "Pedro Sanchez",
       "precio": 4.20,
       "categoria": "Aventura",
-      "año": 1420,
+      "anno": 1420,
       "actores": 
       [
         { "nombre": "Jake Lloyd",
@@ -23,7 +23,7 @@
       "director": "Pablo Quintanilla",
       "precio": 69.69,
       "categoria": "Humor",
-      "año": 1969,
+      "anno": 1969,
       "actores": 
       [
         { "nombre": "Jake Lloyd",
@@ -36,10 +36,10 @@
 			"id": 3,
 			"titulo": "TED",
       "poster": "imgs/Ted.jpg",
-      "director": "Andrés Iniesta",
+      "director": "Andres Iniesta",
       "precio": 1,
       "categoria": "Terror",
-      "año": 1969,
+      "anno": 1969,
       "actores": 
       [
         { "nombre": "Jake Lloyd",
@@ -52,10 +52,10 @@
 			"id": 4,
 			"titulo": "Ali G",
       "poster": "imgs/AliG.jpg",
-      "director": "Andrés Iniesta",
+      "director": "Andres Iniesta",
       "precio": 666,
       "categoria": "Aventura",
-      "año": 1969,
+      "anno": 1969,
       "actores": 
       [
         { "nombre": "Jake Lloyd",
@@ -68,10 +68,10 @@
 			"id": 5,
 			"titulo": "Shrek",
       "poster": "imgs/Shrek.jpg",
-      "director": "Andrés Iniesta",
+      "director": "Andres Iniesta",
       "precio": 13.69,
       "categoria": "Terror",
-      "año": 1969,
+      "anno": 1969,
       "actores": 
       [
         { "nombre": "Jake Lloyd",
@@ -84,10 +84,10 @@
 			"id": 6,
 			"titulo": "Shrek 2",
       "poster": "imgs/Shrek.jpg",
-      "director": "Andrés Iniesta",
+      "director": "Andres Iniesta",
       "precio": 9.69,
       "categoria": "Terror",
-      "año": 1969,
+      "anno": 1969,
       "actores": 
       [
         { "nombre": "Jake Lloyd",
@@ -100,10 +100,10 @@
 			"id": 7,
 			"titulo": "Shrek 3",
       "poster": "imgs/Shrek.jpg",
-      "director": "Andrés Iniesta",
+      "director": "Andres Iniesta",
       "precio": 6.69,
       "categoria": "Terror",
-      "año": 1969,
+      "anno": 1969,
       "actores": 
       [
         { "nombre": "Jake Lloyd",

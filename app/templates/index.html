@@ -11,7 +11,7 @@
     <div class="side-menu">
       <h1 class="side-menu-title">Search</h1>
       <div class="search-container">
-        <form action="index" method="GET">
+        <form action="{{ url_for('index') }}" method="get">
           <input type="text" placeholder="Type here..." name="title" id="title" {% if values %}value="{{ values.title }}"{% endif %}>
           <button type="submit"><i class="fa fa-search"></i></button>
           <select name="category" id="category">
