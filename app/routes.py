@@ -54,6 +54,10 @@ def login():
                     last_url = url_for('index')
                 session['last_url'] = ''
                 session['user'] = username
+                if not 'films' in session or not session['films']:
+                    delete_user_data(session)
+                    if 'user_cart' in session and username in session['user_cart']:
+                        session['films'] = session['user_cart'][username]
                 session.modified = True
 
                 resp = make_response(redirect(last_url))
@@ -252,6 +256,10 @@ def buy(pay_method):
                     total=total,
                     error_msg=f'Not enough {pay_method}!',
                 )
+            
+            if 'user_cart' in session and session['user'] and session['user'] in session['user_cart']:
+                session['user_cart'][session['user']] = []
+                session.modified = True
 
             # Save user data
             with open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat'), 'w') as f:
@@ -286,8 +294,8 @@ def add_money():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    session.pop('user', None)
-    session.pop('films', None)
+    delete_user_data(session)
+
     return redirect(url_for('index'))
 
 @app.route('/random_number', methods=['GET', 'POST'])
@@ -297,3 +305,14 @@ def random_number():
 @app.errorhandler(404)
 def page_not_found(error):
    return render_template('404.html', logged='user' in session), 404
+
+def delete_user_data(session):
+    if 'user' in session and 'films' in session and session['films']:
+        if 'user_cart' in session:
+            session['user_cart']['user'] = session['films']
+        else:
+            session['user_cart'] = {session['user']: session['films']}
+        session.modified = True
+    
+    session.pop('user', None)
+    session.pop('films', None)
