@@ -488,15 +488,17 @@ body {
 }
 
 .user-image img{
-  height: 80%;
+  width: 30%;
   display:block;
   margin:auto;
-  padding-top: 12px;
+  padding-top: 16px;
 }
 
 .user-info h1{
   text-align: center;
-  margin-bottom: 48px;
+  font-size: 24px;
+  margin-bottom: 16px;
+  margin-top: 10px;
 }
 
 .user-info h3{
