@@ -53,11 +53,11 @@ def login():
                 else:
                     last_url = url_for('index')
                 session['last_url'] = ''
-                session['user'] = username
                 if not 'films' in session or not session['films']:
                     delete_user_data(session)
                     if 'user_cart' in session and username in session['user_cart']:
                         session['films'] = session['user_cart'][username]
+                session['user'] = username
                 session.modified = True
 
                 resp = make_response(redirect(last_url))
@@ -76,7 +76,7 @@ def login():
                 user=request.cookies.get('username')
             )
     else:
-        if 'last_url' not in session:
+        if request.referrer != url_for('login'):
             session['last_url'] = request.referrer
             session.modified = True
         return render_template('login.html', logged='user' in session, user=request.cookies.get('username'))
@@ -112,7 +112,7 @@ def history():
         user_data = json.load(open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat')))
         history = json.load(open(path.join(app.root_path, 'usuarios', session['user'], 'historial.json')))
 
-        return render_template('history.html', logged='user' in session, user=user_data, films_bought=history, any_film=len(history)>0)
+        return render_template('history.html', logged='user' in session, user=user_data, films_bought=history[::-1], any_film=len(history)>0)
     else:
         session['last_url'] = url_for('history')
         session.modified = True
