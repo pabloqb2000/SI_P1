@@ -2,3 +2,5 @@ thesessions/
 si1pyenv/
 __pycache__/
 usuarios/
+dump_v*
+data
