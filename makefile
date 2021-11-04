@@ -16,4 +16,5 @@ create_db:
 
 update_db:
 	psql $(PGDATABASE) $(PGUSER) -f $(SQL_FILE)
+
 	
