@@ -11,7 +11,9 @@ ALTER TABLE customers
     DROP COLUMN age,
     DROP COLUMN income,
     DROP COLUMN gender,
-    ADD salt varchar(32);
+    ADD salt varchar(32),
+    ADD loyalty int DEFAULT 0,
+    ADD balance float;
 
 DROP TABLE imdb_movielanguages;
 DROP TABLE imdb_moviecountries;
@@ -55,9 +57,18 @@ ALTER TABLE imdb_actormovies
     ADD CONSTRAINT movieid FOREIGN KEY (movieid) REFERENCES imdb_movies(movieid),
     ADD CONSTRAINT actorid FOREIGN KEY (actorid) REFERENCES imdb_actors(actorid);
 
+CREATE TABLE alerts (
+    prod_id int,
+    alert_date timestamp,
+    FOREIGN KEY (prod_id) REFERENCES products(prod_id)
+);
 
-    
+CREATE OR REPLACE FUNCTION setCustomersBalance(IN initialBalance bigint) RETURNS void
+    BEGIN
+        ALTER TABLE customers
+            ADD CONSTRAINT balance DEFAULT (RAND()*(initialBalance + 1));
+    END;
 
-
+SELECT setCustomersBalance(100);
 
 
