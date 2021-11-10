@@ -12,7 +12,8 @@ ALTER TABLE customers
     DROP COLUMN income,
     DROP COLUMN gender,
     ADD salt varchar(32),
-    ADD loyalty int DEFAULT 0;
+    ADD loyalty int DEFAULT 0,
+    ADD balance bigint;
 
 DROP TABLE imdb_movielanguages;
 DROP TABLE imdb_moviecountries;
@@ -62,13 +63,21 @@ CREATE TABLE alerts (
     FOREIGN KEY (prod_id) REFERENCES products(prod_id)
 );
 
-CREATE OR REPLACE FUNCTION setCustomersBalance(IN initialBalance bigint) RETURNS void AS $$
-BEGIN
-    ALTER TABLE customers
-        ADD balance float DEFAULT (RANDOM()*(initialBalance + 1));
+CREATE OR REPLACE FUNCTION setCustomersBalance(IN initialBalance bigint) RETURNS SETOF customers AS $$
+    DECLARE
+        r customers%rowtype;
+    BEGIN
+    FOR r IN
+        SELECT * FROM customers
+    LOOP
+        r.balance = random()*($1 + 1);
+        RETURN NEXT r; -- return current row of SELECT
+    END LOOP;
+    RETURN;
 END
-$$
-LANGUAGE plpgsql;
 
-SELECT setCustomersBalance(100);
+$$ LANGUAGE plpgsql;
+
+SELECT * FROM setCustomersBalance(100);
+
 
