@@ -80,4 +80,34 @@ $$ LANGUAGE plpgsql;
 
 SELECT * FROM setCustomersBalance(100);
 
+CREATE OR REPLACE FUNCTION setOrderAmount() RETURNS VOID AS $$$$
+    DECLARE
+        o orders%rowtype;
+        od orderdetail%rowtype;
+        p products%rowtype;
+        suma numeric := 0;
+        sum_impuestos numeric := 0;
+    BEGIN
+    FOR o IN
+        SELECT * FROM orders
+    LOOP
+        FOR od IN 
+            SELECT * from orderdetail
+        LOOP
+            sum_impuestos = sum_impuestos + orderdetail.price
+            RETURN NEXT od;
+        END LOOP;
+        FOR p IN 
+            SELECT * from products
+        LOOP
+            suma = suma + orderdetail.price
+            RETURN NEXT od;
+        END LOOP;
+        o.netamount = suma
+        o.totalamount = sum_impuestos
+        RETURN NEXT o; -- return current row of SELECT
+    END LOOP;
+    RETURN;
+END
 
+ LANGUAGE plpgsql;
