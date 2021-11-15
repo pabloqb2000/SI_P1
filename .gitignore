@@ -4,3 +4,4 @@ __pycache__/
 usuarios/
 dump_v*
 data
+temp.*

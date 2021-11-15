@@ -5,6 +5,7 @@ DBFILE = sql_files/dump_v1.4.sql.gz
 SQL_UPDATE_FILE = sql_files/actualiza.sql
 SQL_PRICE_FILE = sql_files/setPrice.sql
 SQL_ORDER_FILE = sql_files/setOrderAmount.sql
+SQL_SALES_FILE = sql_files/getTopSales.sql
 
 
 reset_db: clear_db create_db update_db
@@ -27,5 +28,11 @@ set_price:
 
 set_order_amount:
 	psql $(PGDATABASE) $(PGUSER) -f $(SQL_ORDER_FILE)
+
+get_top_sales:
+	psql $(PGDATABASE) $(PGUSER) -f $(SQL_SALES_FILE)
+
+temp:
+	psql $(PGDATABASE) $(PGUSER) -f sql_files/temp.sql
 
 	
