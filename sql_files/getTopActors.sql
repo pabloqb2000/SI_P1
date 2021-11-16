@@ -12,9 +12,9 @@ CREATE OR REPLACE FUNCTION getTopActors(genre CHAR)
         FROM (
             SELECT Count(*) AS Num, imdb_actors.actorid
             FROM imdb_actors
-            LEFT JOIN imdb_actormovies ON imdb_actors.actorid      = imdb_actormovies.actorid
-            LEFT JOIN imdb_movies      ON imdb_actormovies.movieid = imdb_movies.movieid
-            LEFT JOIN imdb_moviegenres ON imdb_moviegenres.movieid = imdb_movies.movieid
+            INNER JOIN imdb_actormovies ON imdb_actors.actorid      = imdb_actormovies.actorid
+            INNER JOIN imdb_movies      ON imdb_actormovies.movieid = imdb_movies.movieid
+            INNER JOIN imdb_moviegenres ON imdb_moviegenres.movieid = imdb_movies.movieid
             WHERE imdb_moviegenres.genre=$1
             GROUP BY imdb_actors.actorid
             HAVING Count(*) > 4
@@ -26,9 +26,9 @@ CREATE OR REPLACE FUNCTION getTopActors(genre CHAR)
                 ORDER BY year ASC
             ) AS rk
             FROM imdb_actors
-            LEFT JOIN imdb_actormovies ON imdb_actors.actorid = imdb_actormovies.actorid
-            LEFT JOIN imdb_movies ON imdb_actormovies.movieid = imdb_movies.movieid
-            LEFT JOIN imdb_moviegenres ON imdb_moviegenres.movieid = imdb_movies.movieid
+            INNER JOIN imdb_actormovies ON imdb_actors.actorid = imdb_actormovies.actorid
+            INNER JOIN imdb_movies ON imdb_actormovies.movieid = imdb_movies.movieid
+            INNER JOIN imdb_moviegenres ON imdb_moviegenres.movieid = imdb_movies.movieid
             WHERE imdb_moviegenres.genre=$1
         ) AS T2
         ON T1.actorid = T2.actorid

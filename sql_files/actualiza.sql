@@ -13,7 +13,7 @@ ALTER TABLE customers
     DROP COLUMN IF EXISTS gender,
     ADD salt varchar(32),
     ADD loyalty int DEFAULT 0,
-    ADD balance bigint;
+    ADD balance NUMERIC;
 
 
 ALTER TABLE imdb_movies
@@ -98,7 +98,7 @@ ALTER TABLE imdb_movielanguages
 
 CREATE TABLE alerts (
     prod_id int,
-    alert_date timestamp,
+    alert_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (prod_id) REFERENCES products(prod_id)
 );
 

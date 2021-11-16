@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION setOrderAmount() RETURNS void AS $$
         FROM (
             SELECT SUM(price * quantity) AS sum_price, orders.orderid AS orderid
             FROM orders
-            LEFT JOIN orderdetail ON orders.orderid = orderdetail.orderid
+            INNER JOIN orderdetail ON orders.orderid = orderdetail.orderid
             GROUP BY orders.orderid
         ) AS summed
         WHERE summed.orderid = orders.orderid;

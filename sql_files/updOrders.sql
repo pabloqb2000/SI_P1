@@ -1,6 +1,5 @@
 CREATE OR REPLACE FUNCTION updOrders_trigger()
-  RETURNS trigger AS
-$$
+RETURNS trigger AS $$
 BEGIN
     IF TG_OP = 'DELETE' THEN      -- use reference to old
         UPDATE orders
@@ -8,7 +7,7 @@ BEGIN
         FROM (
             SELECT SUM(price * quantity) AS sum_price, orders.orderid AS orderid
             FROM orders
-            LEFT JOIN orderdetail ON orders.orderid = orderdetail.orderid
+            INNER JOIN orderdetail ON orders.orderid = orderdetail.orderid
             GROUP BY orders.orderid
         ) AS summed
         WHERE orders.orderid = old.orderid AND 
@@ -26,7 +25,7 @@ BEGIN
         FROM (
             SELECT SUM(price * quantity) AS sum_price, orders.orderid AS orderid
             FROM orders
-            LEFT JOIN orderdetail ON orders.orderid = orderdetail.orderid
+            INNER JOIN orderdetail ON orders.orderid = orderdetail.orderid
             GROUP BY orders.orderid
         ) AS summed
         WHERE orders.orderid = new.orderid AND 

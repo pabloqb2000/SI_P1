@@ -16,9 +16,9 @@ CREATE OR REPLACE FUNCTION getTopSales(
                     movietitle AS title, 
                     Sum(quantity) AS quantity
                 FROM imdb_movies
-                LEFT JOIN products    ON imdb_movies.movieid = products.movieid
-                LEFT JOIN orderdetail ON orderdetail.prod_id = products.prod_id
-                LEFT JOIN orders      ON orders.orderid      = orderdetail.orderid
+                INNER JOIN products    ON imdb_movies.movieid = products.movieid
+                INNER JOIN orderdetail ON orderdetail.prod_id = products.prod_id
+                INNER JOIN orders      ON orders.orderid      = orderdetail.orderid
                 WHERE EXTRACT(YEAR FROM orders.orderdate) BETWEEN year1 AND year2
                 GROUP BY imdb_movies.movieid, 1
                 ORDER BY 3 DESC

@@ -8,8 +8,9 @@ SQL_ORDER_FILE = sql_files/setOrderAmount.sql
 SQL_SALES_FILE = sql_files/getTopSales.sql
 SQL_ACTORS_FILE = sql_files/getTopActors.sql
 SQL_UPDORDERS_FILE = sql_files/updOrders.sql
+SQL_UPDINVNCUST_FILE = sql_files/updInventoryAndCustomer.sql
 
-all: reset_db set_price set_order_amount get_top_sales get_top_actors updOrders
+all: reset_db set_price set_order_amount get_top_sales get_top_actors updOrders updInventoryAndCustomer
 
 reset_db: clear_db create_db update_db
 
@@ -41,7 +42,10 @@ get_top_actors:
 updOrders:
 	psql $(PGDATABASE) $(PGUSER) -f $(SQL_UPDORDERS_FILE)
 
-temp: updOrders
+updInventoryAndCustomer:
+	psql $(PGDATABASE) $(PGUSER) -f $(SQL_UPDINVNCUST_FILE)
+
+temp:
 	psql $(PGDATABASE) $(PGUSER) -f sql_files/temp.sql
 
 	

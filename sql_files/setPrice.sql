@@ -9,9 +9,9 @@ WHERE orderdetail.prod_id = products.prod_id AND orderdetail.orderid = orders.or
 -- Debug only 
 SELECT quantity, EXTRACT(YEAR FROM CURRENT_DATE) - EXTRACT(YEAR FROM orderdate) AS yr, products.price, orderdetail.price AS newprice
 FROM orderdetail
-LEFT JOIN orders
+INNER JOIN orders
 ON orders.orderid = orderdetail.orderid 
-LEFT JOIN products
+INNER JOIN products
 ON orderdetail.prod_id = products.prod_id
 ORDER BY price DESC, quantity DESC
 LIMIT 10;
