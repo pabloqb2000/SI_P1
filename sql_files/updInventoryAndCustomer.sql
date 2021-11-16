@@ -25,11 +25,9 @@ BEGIN
         -- Update customers
         UPDATE customers
         SET
-            balance = balance - SUM(price),
-            loyalty = loyalty + SUM(price)*5
-        FROM orderdetail
-        WHERE orderdetail.orderid = NEW.orderid AND
-            customers.customerid = NEW.customerid;
+            balance = balance - NEW.totalamount,
+            loyalty = loyalty + NEW.totalamount*5
+        WHERE customers.customerid = NEW.customerid;
 
     END IF;
     RETURN NEW;
@@ -37,9 +35,10 @@ END;
 $$
 LANGUAGE 'plpgsql';
 
+DROP TRIGGER IF EXISTS updInventoryAndCustomer ON orders;
 
 CREATE TRIGGER updInventoryAndCustomer
-AFTER UPDATE OF status 
+BEFORE UPDATE OF status 
 ON orders
 FOR EACH ROW
 EXECUTE PROCEDURE updInventoryAndCustomer_trigger();

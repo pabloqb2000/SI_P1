@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION getTopActors(genre CHAR)
-    RETURNS TABLE(Actor VARCHAR, Num INT, Debut INT,     -- DUDA: se puede usar returns table
-                  Film VARCHAR,  Director VARCHAR) AS $$ -- DUDA: se puede usar VARCHAR?
+    RETURNS TABLE(Actor VARCHAR, Num INT, Debut INT,
+                  Film VARCHAR,  Director VARCHAR) AS $$
     BEGIN
         RETURN QUERY
         SELECT 
@@ -39,4 +39,4 @@ CREATE OR REPLACE FUNCTION getTopActors(genre CHAR)
     END;
 $$ LANGUAGE plpgsql;
 
-SELECT * FROM getTopActors('Drama') LIMIT 20; -- DUDA: hay que dejar esto?
+SELECT * FROM getTopActors('Drama') LIMIT 20;
