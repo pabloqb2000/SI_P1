@@ -14,10 +14,13 @@
           <strong>Director</strong>: {{ film.director }} <br>
           <strong>Year</strong>: {{ film.anno }} <br>
           <strong>Price</strong>: {{ film.precio }} €<br>
+          <strong>Category</strong>: {{ film.categoria }}<br>
           <strong>Actors</strong>: <br>
-            {% for actor in film.actores %}
-              {{ actor.nombre }} - {{ actor.personaje }} <br>
-            {% endfor %}
+      </p>
+      <p class="film-actors">
+        {% for actor in film.actores %}
+          {{ actor.nombre }} - {{ actor.personaje }} <br>
+        {% endfor %}
       </p>
       <form action="{{ url_for('add_to_cart') }}" method="post">
         <input type="hidden" value="{{ film.id }}" name="film-id" id="film-id">

@@ -1,7 +1,8 @@
 thesessions/
 si1pyenv/
 __pycache__/
-usuarios/
+usuarios/*.dat
+usuarios/*.json
 dump_v*
 data
 temp.*

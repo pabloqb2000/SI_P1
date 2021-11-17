@@ -7,7 +7,7 @@ import json
 import os
 from os import path
 import random
-import sys
+import app.database as db
 from app.utils import *
 import datetime
 from collections import Counter
@@ -15,19 +15,23 @@ from collections import Counter
 @app.route('/')
 @app.route('/index')
 def index():
-    catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
-    catalogue = json.loads(catalogue_data)
-    films = catalogue['peliculas']
-    categories = get_categories(films)
 
-    values=None
     if request.args:
-        films = filter_search(films, request.args)
+        films = db.movieSearch(
+            request.args.get('title'),
+            request.args.get('category')
+        )
+        
         values = {
             'title': request.args.get('title'),
             'category': request.args.get('category').title(),
         }
+    else:
+        films = db.getListOfMovies()
+        values=None
 
+
+    categories = db.getGenres()
     return render_template(
         'index.html', logged='user' in session,
         title = "Home", 
@@ -144,14 +148,7 @@ def cart():
 
 @app.route('/film/<int:film_id>')
 def film(film_id):
-    catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
-    catalogue = json.loads(catalogue_data)
-
-    film = None
-    for f in catalogue['peliculas']:
-        if f['id'] == film_id:
-            film = f
-            break
+    film = db.getFilmById(film_id)
     
     if not film:
         abort(404)

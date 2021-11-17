@@ -1,0 +1,10 @@
+{
+    "email": "test@mail.com",
+    "username": "testtt",
+    "password": "3975ee546391b9684545646a21a821d2360184c076785155fef80815f151684a1c00a35168a21b8dcf24cce599fa45ab66f9e2519359338fe93784121028983c",
+    "creditcard": "1234567890123456",
+    "direction": "asdf",
+    "salt": "FdHbOVSJzn62ETq1",
+    "balance": 91,
+    "points": 0
+}
