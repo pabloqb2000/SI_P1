@@ -12,11 +12,20 @@
       <h1 class="side-menu-title">Search</h1>
       <div class="search-container">
         <form action="{{ url_for('index') }}" method="get">
-          <input type="text" placeholder="Type here..." name="title" id="title" {% if values %}value="{{ values.title }}"{% endif %}>
+          <input type="text" placeholder="Type here..." name="title" id="title" value="{{ values.title }}">
           <button type="submit"><i class="fa fa-search"></i></button>
           <select name="category" id="category">
+            <option value="All">All</option>
             {% for category in categories %}
-              <option value="{{ category }}" {% if values and category==values.category %}selected="selected"{% endif %}>{{ category }}</option>
+              <option value="{{ category }}" {% if category==values.category %}selected="selected"{% endif %}>{{ category }}</option>
+            {% endfor %}
+          </select>
+          <h1 class="side-menu-title">Actors</h1>
+          <input type="number" id="actors" name="actors" min="0" max="15" value="{{ values.actors }}">
+          <button type="submit"><i class="fa fa-refresh"></i></button>
+          <select name="genre" id="genre">
+            {% for category in categories %}
+              <option value="{{ category }}" {% if category==values.genre %}selected="selected"{% endif %}>{{ category }}</option>
             {% endfor %}
           </select>
         </form>
@@ -24,6 +33,33 @@
     </div>
 
     <div class="content">
+      {% if actors %}
+      <h1 class="content-title">Actors</h1>
+      <div class="table-div">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Actor</th>
+              <th>Debut</th>
+              <th>Year</th>
+              <th>Film</th>
+              <th>Director</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for actor in actors %}
+            <tr class="clickable-row" data-href="{{ url_for('film', film_id=actor.film_id) }}">
+              <td>{{ actor.actor }}</td>
+              <td>{{ actor.debut }}</td>
+              <td>{{ actor.year  }}</td>
+              <td>{{ actor.film  }}</td>
+              <td>{{ actor.director }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
       <h1 class="content-title">Films</h1>
       <div class="films">
         {% for film in films %}
@@ -42,4 +78,11 @@
       </div>
     </div>
   </div>
+  <script>
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+  </script>
 {% endblock %}

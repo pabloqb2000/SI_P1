@@ -39,4 +39,4 @@ CREATE OR REPLACE FUNCTION getTopActors(genre CHAR)
     END;
 $$ LANGUAGE plpgsql;
 
-SELECT * FROM getTopActors('Drama') LIMIT 20;
+-- SELECT * FROM getTopActors('Drama') LIMIT 20;

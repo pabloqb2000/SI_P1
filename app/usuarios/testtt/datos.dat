@@ -8,3 +8,9 @@
     "balance": 91,
     "points": 0
 }
+
+
+    q = f"INSERT INTO customers \
+        (address1, email, creditcard, username, password, salt, loyalty, balance) \
+        VALUES ('{user_data['direction']}', '{user_data['email']}', '{user_data['creditcard']}', \
+        '{user_data['username']}', '{user_data['password']}', '{user_data['salt']}',{user_data['balance']}, {user_data['points']})"

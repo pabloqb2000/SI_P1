@@ -10,7 +10,7 @@ SQL_ACTORS_FILE = sql_files/getTopActors.sql
 SQL_UPDORDERS_FILE = sql_files/updOrders.sql
 SQL_UPDINVNCUST_FILE = sql_files/updInventoryAndCustomer.sql
 
-all: reset_db set_price set_order_amount updOrders updInventoryAndCustomer
+all: reset_db set_price set_order_amount updOrders updInventoryAndCustomer get_top_sales get_top_actors
 
 reset_db: clear_db create_db update_db
 

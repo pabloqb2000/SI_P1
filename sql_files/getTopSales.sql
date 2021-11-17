@@ -29,6 +29,6 @@ CREATE OR REPLACE FUNCTION getTopSales(
     END;
 $$ LANGUAGE plpgsql;
 
-SELECT * FROM getTopSales(2018, 2021);
+-- SELECT * FROM getTopSales(2018, 2021);
 
             

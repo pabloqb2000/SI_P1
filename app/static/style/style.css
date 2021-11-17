@@ -189,6 +189,61 @@ body {
   background-color: rgb(220, 220, 220);
 }
 
+.table-div {
+  width: 100%;
+  margin: 18px 0px;
+}
+
+.styled-table {
+  border-collapse: collapse;
+  margin: auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 8px 8px 8px rgb(25, 25, 25);
+}
+.styled-table thead tr {
+  background-color: rgb(24, 27, 39);
+  color: #ffffff;
+  text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #535353;
+}
+
+.styled-table tbody tr:nth-of-type(odd) {
+  background-color: rgb(30);
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid rgb(24, 27, 39);
+}
+
+.styled-table tbody tr:hover {
+  background-color: #423c63;
+  cursor: pointer;
+}
+
+.side-menu #genre {
+  width: 170px;
+}
+
+.side-menu input[type=number] {
+  border-radius: 6px;
+  width: 40px;
+  height: 26px;
+  font-size: 16px;
+  padding-left: 10px;
+}
+
 .side-menu .search-container button {
   float: right;
   padding: 6px 10px;

@@ -15,6 +15,14 @@ ALTER TABLE customers
     ADD loyalty int DEFAULT 0,
     ADD balance NUMERIC;
 
+ALTER TABLE customers
+    ALTER COLUMN firstname DROP NOT NULL,
+    ALTER COLUMN lastname DROP NOT NULL,
+    ALTER COLUMN "password" TYPE VARCHAR(128);
+
+ALTER SEQUENCE customers_customerid_seq RESTART WITH 14093;
+
+UPDATE imdb_movies SET year = '1998' WHERE year = '1998-1999';
 
 ALTER TABLE imdb_movies
     DROP COLUMN IF EXISTS movierelease,

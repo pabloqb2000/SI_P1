@@ -1,7 +1,7 @@
 import sys, traceback
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
-from sqlalchemy.sql import select, and_
+from sqlalchemy.sql import select, insert, update, and_
 
 img_files = [
     "imgs/Orgazmo.jpg",
@@ -21,8 +21,10 @@ imdb_actormovies    = Table('imdb_actormovies', db_meta, autoload=True, autoload
 imdb_actors         = Table('imdb_actors', db_meta, autoload=True, autoload_with=db_engine)
 imdb_moviegenres    = Table('imdb_moviegenres', db_meta, autoload=True, autoload_with=db_engine)
 products            = Table('products', db_meta, autoload=True, autoload_with=db_engine)
+customers           = Table('customers', db_meta, autoload=True, autoload_with=db_engine)
 
-def execute_query(query):
+
+def execute_query(query, to_list=True):
     try:
         # conexion a la base de datos
         db_conn = None
@@ -31,7 +33,7 @@ def execute_query(query):
         db_result = db_conn.execute(query)
         db_conn.close()
 
-        return list(db_result)
+        return list(db_result) if to_list else db_result
     except:
         if db_conn is not None:
             db_conn.close()
@@ -41,14 +43,49 @@ def execute_query(query):
 
         return None
 
-def movieSearch(title, genre):
+def userExists(username):
+    res = execute_query(select([customers]).where(customers.c.username == username))
+    return len(res) > 0
+
+def getUserData(username):
+    userdata = execute_query(select([customers]).where(customers.c.username == username))[0]
+    return {
+        "email":      userdata[4],
+        "username":   userdata[6],
+        "password":   userdata[7],
+        "creditcard": userdata[5],
+        "direction":  userdata[3],
+        "salt":       userdata[8],
+        "balance":    userdata[10],
+        "points":     userdata[9]
+    }
+
+def registerUser(user_data):
+    execute_query(insert(customers).values(
+        address1 = user_data['direction'],
+        email = user_data['email'],
+        creditcard = user_data['creditcard'],
+        username = user_data['username'],
+        password = user_data['password'],
+        salt = user_data['salt'],
+        balance = user_data['balance'],
+        loyalty = user_data['points']
+    ))
+
+def addMoneyUser(user_name, money=100):
+    execute_query(update(customers) \
+        .where(customers.c.username == user_name) \
+        .values(balance = customers.c.balance + money))
+
+def movieSearch(title, genre, n=20):
     title = f'%{title}%'
     if genre == 'All':
-        q = select([imdb_movies]).where(imdb_movies.c.movietitle.ilike(title))
+        q = select([imdb_movies]).where(imdb_movies.c.movietitle.ilike(title)).limit(n)
     else:
         q = select([imdb_movies]) \
             .join(imdb_moviegenres) \
-            .where(and_(imdb_movies.c.movietitle.ilike(title), imdb_moviegenres.c.genre == genre))
+            .where(and_(imdb_movies.c.movietitle.ilike(title), imdb_moviegenres.c.genre == genre))\
+            .limit(n)
     return movies_to_dict(execute_query(q))
         
 
@@ -80,8 +117,8 @@ def movies_to_dict(movies):
     return movies_to_dict
 
 def getGenres():
-    genres = execute_query(select([imdb_moviegenres.c.genre]).distinct())
-    return ['All'] + [g[0] for g in genres]
+    genres = execute_query(select([imdb_moviegenres.c.genre]).order_by(imdb_moviegenres.c.genre).distinct())
+    return [g[0] for g in genres]
 
 def getFilmById(film_id):
         movies_q = select([imdb_movies]).where(imdb_movies.c.movieid == film_id)   
@@ -136,8 +173,30 @@ def getFilmById(film_id):
         ]
 
         return movie_dict
+
+def getFilmId(film, year):
+    return execute_query(select([imdb_movies.c.movieid]).where(and_(
+        imdb_movies.c.movietitle == film,
+        imdb_movies.c.year == str(year)
+    )))[0][0]
+
+def getActors(n=5, genre='Action'):
+    print(n, genre)
+    if n == 0:
+        return None
+    top_actors = execute_query(f"SELECT * FROM getTopActors('{genre}') LIMIT {n};")
+
+    return [{
+            'actor':    actor_data[0],
+            'debut':    actor_data[1],
+            'year':     actor_data[2],
+            'film':     actor_data[3],
+            'director': actor_data[4],
+            'film_id':  getFilmId(actor_data[3], actor_data[2]),
+        }
+        for actor_data in top_actors
+    ]
     
 
 if __name__ == '__main__':
-    for m in getFilmById(103):
-        print(m)
+    print(getActors()[0].keys())

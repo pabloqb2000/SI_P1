@@ -15,7 +15,6 @@ from collections import Counter
 @app.route('/')
 @app.route('/index')
 def index():
-
     if request.args:
         films = db.movieSearch(
             request.args.get('title'),
@@ -25,29 +24,42 @@ def index():
         values = {
             'title': request.args.get('title'),
             'category': request.args.get('category').title(),
+            'genre': request.args.get('genre'),
+            'actors': request.args.get('actors')
         }
+        actors = db.getActors(
+            request.args.get('actors'),
+            request.args.get('genre')
+        )
+        print(actors)
     else:
         films = db.getListOfMovies()
-        values=None
-
+        values = {
+            'title': '',
+            'category': 'All',
+            'genre': 'Action',
+            'actors': '5'
+        }
+        actors = None
 
     categories = db.getGenres()
+
     return render_template(
         'index.html', logged='user' in session,
         title = "Home", 
         films=films, 
         categories=categories, 
-        values=values
+        values=values,
+        actors=actors
     )
     
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'username' in request.values and request.values['username']:
         username = request.values['username']
-        base_dir = path.join(app.root_path, 'usuarios', username)
 
-        if os.path.isdir(base_dir):
-            user_data = json.load(open(path.join(base_dir, 'datos.dat')))
+        if db.userExists(username):
+            user_data = db.getUserData(username)
             password_hash = hash_password(user_data['salt'], request.values['password'])
 
             if user_data['username'] == username and \
@@ -113,8 +125,8 @@ def remove_from_cart():
 @app.route('/history')
 def history():
     if 'user' in session:        
-        user_data = json.load(open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat')))
-        history = json.load(open(path.join(app.root_path, 'usuarios', session['user'], 'historial.json')))
+        user_data = db.getUserData(session['user'])
+        history = [] #TODO: get this from db
 
         return render_template('history.html', logged='user' in session, user=user_data, films_bought=history[::-1], any_film=len(history)>0)
     else:
@@ -194,21 +206,12 @@ def register_post():
         return render_template('register.html', logged='user' in session, error_msg=validation_msg, values=user_data)
 
     # Check if username already exists
-    base_dir = path.join(app.root_path, 'usuarios')
-    other_users = [
-        name for name in os.listdir(base_dir) 
-        if path.isdir(os.path.join(base_dir, name))
-    ]
-    if username in other_users:
+    user_exists = db.userExists(username)
+    if user_exists:
         return render_template('register.html', logged='user' in session, error_msg='Username is already in use!', values=user_data)
 
-    # Create a new user file
-    user_dir = path.join(base_dir, username)
-    os.mkdir(user_dir)
-    with open(path.join(user_dir, 'datos.dat'), 'w', encoding='utf-8') as f:
-        json.dump(user_data, f, ensure_ascii=False, indent=4)
-    with open(path.join(user_dir, 'historial.json'), 'w', encoding='utf-8') as f:
-        json.dump([], f, ensure_ascii=False, indent=4)
+    # Save user data
+    db.registerUser(user_data)
 
     return render_template('login.html', logged='user' in session, user=username)
 
@@ -278,16 +281,8 @@ def buy(pay_method):
 @app.route('/add_money', methods=['GET', 'POST'])
 def add_money():
     if 'user' in session:
-        with open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat')) as f:
-            user_data = json.load(f)
-
-        user_data['balance'] = round(user_data['balance'] + 100, 2)
-
-        with open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat'), 'w') as f:
-            json.dump(user_data, f, ensure_ascii=False, indent=4)
-
+        db.addMoneyUser(session['user'], 100)
     return redirect(url_for('history'))
-
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
