@@ -31,7 +31,6 @@ def index():
             request.args.get('actors'),
             request.args.get('genre')
         )
-        print(actors)
     else:
         films = db.getListOfMovies()
         values = {
@@ -100,35 +99,46 @@ def login():
 @app.route('/add-to-cart', methods=['POST'])
 def add_to_cart():
     if 'film-id' in request.values:
-        if 'films' in session:
-            session['films'].append(request.values['film-id'])
+        if not 'user' in session:
+            # Use session to store cart
+            if 'films' in session:
+                session['films'].append(request.values['film-id'])
+            else:
+                session['films'] = [request.values['film-id']]
             session.modified = True
         else:
-            session['films'] = [request.values['film-id']]
-            session.modified = True
+            # Use db to store cart
+            db.addToChart(session['user'], request.values['film-id'])
         return redirect(url_for('cart'))
     else:
         return redirect(request.referrer)
 
 @app.route('/remove-from-cart', methods=['POST'])
 def remove_from_cart():
-    if 'filmid' in request.values and \
-       'films' in session and \
-       request.values['filmid'] in session['films']:
+    if not 'user' in session:
+        # User session cart
+        if 'filmid' in request.values and \
+        'films' in session and \
+        request.values['filmid'] in session['films']:
 
-        session['films'].remove(request.values['filmid'])
-        session.modified = True
-        return redirect(url_for('cart'))
+            session['films'].remove(request.values['filmid'])
+            session.modified = True
+            return redirect(url_for('cart'))
+        else:
+            return redirect(request.referrer)
     else:
-        return redirect(request.referrer)
+        # Use db cart
+        if 'filmid' in request.values:
+            db.removeFromCart(session['user'], request.values['filmid'])
+        return redirect(url_for('cart'))
 
 @app.route('/history')
 def history():
     if 'user' in session:        
         user_data = db.getUserData(session['user'])
-        history = [] #TODO: get this from db
+        history = db.getUserHistory(session['user'])
 
-        return render_template('history.html', logged='user' in session, user=user_data, films_bought=history[::-1], any_film=len(history)>0)
+        return render_template('history.html', logged='user' in session, user=user_data, films_bought=history[::-1])
     else:
         session['last_url'] = url_for('history')
         session.modified = True
@@ -136,26 +146,26 @@ def history():
 
 @app.route('/cart')
 def cart():
-    catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
-    catalogue = json.loads(catalogue_data)
-    films_by_id = {str(film['id']): film for film in catalogue['peliculas']}
-
-    if 'films' in session:
-        id_counts = Counter(session['films'])
-        films = [films_by_id[film_id] for film_id in id_counts]
-        for film in films:
-            film['amount'] = id_counts[str(film['id'])]
+    if not 'user' in session:
+        # Use session cart
+        if 'films' in session:
+            id_counts = Counter(session['films'])
+            films_by_id = {str(film['id']): film for film in session['films']}
+            films = [films_by_id[film_id] for film_id in id_counts]
+            for film in films:
+                film['amount'] = id_counts[str(film['id'])]
+        else:
+            films = []
+        total = sum([film['precio']*film['amount'] for film in films])
     else:
-        films = []
+        # Use db cart
+        films, total = db.getFilmsNTotal(session['user'])
 
-
-    total = round(sum([film['precio']*film['amount'] for film in films]), 2)
     return render_template(
         'cart.html', logged='user' in session,
         title = "Cart", 
-        any_film=len(films)>0, 
         films_in_chart=films, 
-        total=total
+        total=round(total, 2)
     )
 
 @app.route('/film/<int:film_id>')
@@ -236,6 +246,10 @@ def buy(pay_method):
             for film in films_to_buy:
                 film['amount'] = id_counts[str(film['id'])]
 
+            '''
+                Si se paga con puntos convertir los puntos a saldo primero
+            '''
+
             # Check if user has enough money
             total = round(sum([film['precio']*film['amount'] for film in films_to_buy]), 2)
             if pay_method == 'money' and user_data['balance'] >= total:
@@ -251,7 +265,6 @@ def buy(pay_method):
                 return render_template(
                     'cart.html', logged='user' in session,
                     title = "Cart", 
-                    any_film=len(films_to_buy)>0, 
                     films_in_chart=films_to_buy, 
                     total=total,
                     error_msg=f'Not enough {pay_method}!',

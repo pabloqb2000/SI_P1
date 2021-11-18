@@ -1,7 +1,7 @@
 import sys, traceback
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
-from sqlalchemy.sql import select, insert, update, and_
+from sqlalchemy.sql import select, insert, update, delete, and_
 
 img_files = [
     "imgs/Orgazmo.jpg",
@@ -22,6 +22,9 @@ imdb_actors         = Table('imdb_actors', db_meta, autoload=True, autoload_with
 imdb_moviegenres    = Table('imdb_moviegenres', db_meta, autoload=True, autoload_with=db_engine)
 products            = Table('products', db_meta, autoload=True, autoload_with=db_engine)
 customers           = Table('customers', db_meta, autoload=True, autoload_with=db_engine)
+orders              = Table('orders', db_meta, autoload=True, autoload_with=db_engine)
+orderdetail         = Table('orderdetail', db_meta, autoload=True, autoload_with=db_engine)
+
 
 
 def execute_query(query, to_list=True):
@@ -70,12 +73,12 @@ def registerUser(user_data):
         salt = user_data['salt'],
         balance = user_data['balance'],
         loyalty = user_data['points']
-    ))
+    ), False)
 
 def addMoneyUser(user_name, money=100):
     execute_query(update(customers) \
         .where(customers.c.username == user_name) \
-        .values(balance = customers.c.balance + money))
+        .values(balance = customers.c.balance + money), False)
 
 def movieSearch(title, genre, n=20):
     title = f'%{title}%'
@@ -180,8 +183,12 @@ def getFilmId(film, year):
         imdb_movies.c.year == str(year)
     )))[0][0]
 
+def getUserId(username):
+    return execute_query(select([customers.c.customerid]).where(
+        customers.c.username == username
+    ))[0][0]
+
 def getActors(n=5, genre='Action'):
-    print(n, genre)
     if n == 0:
         return None
     top_actors = execute_query(f"SELECT * FROM getTopActors('{genre}') LIMIT {n};")
@@ -196,7 +203,138 @@ def getActors(n=5, genre='Action'):
         }
         for actor_data in top_actors
     ]
+
+def getUserHistory(username):
+    history = execute_query(select(['*']).select_from(customers)\
+        .join(orders).join(orderdetail).join(products).join(imdb_movies)\
+        .where(and_(
+            customers.c.username == username,
+            orders.c.status != None
+        )))
+    return [{
+        'id': film[19],
+        'precio': float(film[20]),
+        'ammount': film[21],
+        'poster': img_files[film[19] % len(img_files)],
+        'titulo': film[27],
+        'date': str(film[12])
+    } for film in history]
+
+def prodIdFromFilm(filmid):
+    return execute_query(select([products.c.prod_id, products.c.price])\
+        .where(products.c.movieid == filmid))[0]
+
+def addToChart(username, filmid):
+    # Check if user already has a cart
+    userid = getUserId(username)
+    cart = execute_query(select([orders.c.orderid]).where(and_(
+        orders.c.customerid == userid,
+        orders.c.status == None
+    )))
+
+    if len(cart) == 0:
+        # Create new cart
+        execute_query(insert(orders).values(customerid = userid), False)
+        
+        cart = execute_query(select([orders.c.orderid]).where(and_(
+            orders.c.customerid == userid,
+            orders.c.status == None
+        )))
+    orderid = cart[0][0]
+
+    # Check if there is an orderdetail for this order
+    prodid, price = prodIdFromFilm(filmid)
+    orderdt = execute_query(select(['*']).where(and_(
+        orderdetail.c.orderid == orderid,
+        orderdetail.c.prod_id == prodid
+    )))
+
+    if len(orderdt) == 0:
+        # Create new orderdetails
+        execute_query(insert(orderdetail).values(
+            orderid = orderid,
+            prod_id = prodid,
+            price = price
+        ), False)
+    else:
+        # Add one to the orderdetail
+        execute_query(update(orderdetail) \
+            .where(and_(
+                orderdetail.c.orderid == orderid,
+                orderdetail.c.prod_id == prodid
+            )).values(quantity = orderdetail.c.quantity + 1), False)
+
+def removeFromCart(username, filmid):
+    # Check if user already has a cart
+    userid = getUserId(username)
+    cart = execute_query(select([orders.c.orderid]).where(and_(
+        orders.c.customerid == userid,
+        orders.c.status == None
+    )))
+
+    if len(cart) == 0:
+        return
+    orderid = cart[0][0]
+
+    # Check if there is an orderdetail for this order
+    prodid, _ = prodIdFromFilm(filmid)
+    orderdt = execute_query(select([orderdetail.c.quantity]).where(and_(
+        orderdetail.c.orderid == orderid,
+        orderdetail.c.prod_id == prodid
+    )))
+
+    if len(orderdt) == 0:
+        return
+
+    if orderdt[0][0] <= 1:
+        # Delete orderdetail if necessary
+        execute_query(delete(orderdetail).where(and_(
+            orderdetail.c.orderid == orderid,
+            orderdetail.c.prod_id == prodid
+        )), False)
+    else:
+        # Substract one to the orderdetail
+        execute_query(update(orderdetail) \
+            .where(and_(
+                orderdetail.c.orderid == orderid,
+                orderdetail.c.prod_id == prodid
+            )).values(quantity = orderdetail.c.quantity - 1), False)
+
     
 
+
+def getFilmsNTotal(username):
+    # Check if user already has a cart
+    userid = getUserId(username)
+    cart = execute_query(select([orders.c.orderid, orders.c.totalamount]).where(and_(
+        orders.c.customerid == userid,
+        orders.c.status == None
+    )))
+
+    if len(cart) == 0:
+        return [], 0
+    orderid, totalamount = cart[0]
+    
+    # Get orderdetails for this cart
+    orderdts = execute_query(select(['*']).where(and_(
+        orderdetail.c.orderid == orderid
+    )))
+
+    films = [
+        execute_query(select([imdb_movies.c.movieid, imdb_movies.c.movietitle])\
+            .select_from(imdb_movies).join(products)\
+            .where(products.c.prod_id == orderdt[1]))[0]
+        for orderdt in orderdts
+    ]
+
+    return [{
+        'precio': orderdt[2],
+        'amount': orderdt[3],
+        'titulo': film[1],
+        'id':     film[0],
+        'poster': img_files[film[0] % len(img_files)],
+    } for film, orderdt in zip(films, orderdts)], totalamount
+
+
 if __name__ == '__main__':
-    print(getActors()[0].keys())
+    addToChart('user', '')

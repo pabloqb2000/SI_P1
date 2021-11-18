@@ -20,7 +20,8 @@ ALTER TABLE customers
     ALTER COLUMN lastname DROP NOT NULL,
     ALTER COLUMN "password" TYPE VARCHAR(128);
 
-ALTER SEQUENCE customers_customerid_seq RESTART WITH 14093;
+ALTER SEQUENCE customers_customerid_seq RESTART WITH 14094;
+ALTER SEQUENCE orders_orderid_seq RESTART WITH 181791;
 
 UPDATE imdb_movies SET year = '1998' WHERE year = '1998-1999';
 
@@ -55,10 +56,15 @@ ALTER TABLE inventory
 
 ALTER TABLE orderdetail
     ADD CONSTRAINT prod_id FOREIGN KEY (prod_id) REFERENCES products(prod_id),
-    ADD CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders(orderid);
+    ADD CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders(orderid),
+    ALTER COLUMN quantity DROP NOT NULL,
+    ALTER COLUMN quantity SET DEFAULT 1;
 
 ALTER TABLE orders
-    ADD CONSTRAINT customerid FOREIGN KEY (customerid) REFERENCES customers(customerid); 
+    ADD CONSTRAINT customerid FOREIGN KEY (customerid) REFERENCES customers(customerid),
+    ALTER COLUMN orderdate DROP NOT NULL,
+    ALTER COLUMN orderdate SET DEFAULT CURRENT_DATE,
+    ALTER COLUMN tax SET DEFAULT 21;
 
 ALTER TABLE imdb_actormovies
     ADD CONSTRAINT movieid FOREIGN KEY (movieid) REFERENCES imdb_movies(movieid),

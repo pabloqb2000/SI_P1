@@ -1,6 +1,6 @@
-PGDATABASE = si1
-PGUSER = alumnodb
-PGPASSWORD = alumnodb
+export PGDATABASE = si1
+export PGUSER = alumnodb
+export PGPASSWORD = alumnodb
 DBFILE = sql_files/dump_v1.4.sql.gz
 SQL_UPDATE_FILE = sql_files/actualiza.sql
 SQL_PRICE_FILE = sql_files/setPrice.sql
@@ -40,7 +40,7 @@ get_top_actors:
 	psql $(PGDATABASE) $(PGUSER) -f $(SQL_ACTORS_FILE)
 
 updOrders:
-	psql $(PGDATABASE) $(PGUSER) -f $(SQL_UPDORDERS_FILE)
+	psql -f $(SQL_UPDORDERS_FILE)
 
 updInventoryAndCustomer:
 	psql $(PGDATABASE) $(PGUSER) -f $(SQL_UPDINVNCUST_FILE)
