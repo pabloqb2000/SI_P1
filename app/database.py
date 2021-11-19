@@ -368,16 +368,14 @@ def userBuy(username, withPoints=False):
         orders.c.status == None
     )))[0]
     if withPoints:
-        # Remove points
+        # Change points to balance
         execute_query(update(customers)\
             .where(customers.c.customerid == userid)\
-            .values(loyalty = customers.c.loyalty - int(amount*100)), False)
-    else:
-        # Remove money
-        print(repr(userid), repr(amount))
-        execute_query(update(customers)\
-            .where(customers.c.customerid == userid)\
-            .values(balance = customers.c.balance - amount), False)
+            .values(
+                loyalty = customers.c.loyalty - int(amount*100),
+                balance = customers.c.balance + amount
+        ), False)
+    
     # Update order
     execute_query(update(orders).values(status='Paid').where(
         orders.c.orderid == orderid

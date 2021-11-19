@@ -20,8 +20,10 @@ CREATE OR REPLACE FUNCTION getTopSales(
                 INNER JOIN orderdetail ON orderdetail.prod_id = products.prod_id
                 INNER JOIN orders      ON orders.orderid      = orderdetail.orderid
                 WHERE EXTRACT(YEAR FROM orders.orderdate) BETWEEN year1 AND year2
-                GROUP BY imdb_movies.movieid, 1
-                ORDER BY 3 DESC
+                -- Esto agrupa por movieids y por el primer parametro del select (yr)
+                GROUP BY imdb_movies.movieid, 1 
+                -- Esto ordena por el tercer parametro del select (quantity)
+                ORDER BY 3 DESC 
             ) AS T
         ) AS R
         WHERE rk = 1
