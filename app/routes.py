@@ -150,8 +150,7 @@ def cart():
         # Use session cart
         if 'films' in session:
             id_counts = Counter(session['films'])
-            films_by_id = {str(film['id']): film for film in session['films']}
-            films = [films_by_id[film_id] for film_id in id_counts]
+            films = [db.getFilmById(film_id) for film_id in set(session['films'])]
             for film in films:
                 film['amount'] = id_counts[str(film['id'])]
         else:
@@ -161,11 +160,18 @@ def cart():
         # Use db cart
         films, total = db.getFilmsNTotal(session['user'])
 
+    if request.args:
+        msg = request.args.get('msg')
+        msg = f"Not enough {'money' if msg == 'mn' else 'points'}!"
+    else:
+        msg = None
+
     return render_template(
         'cart.html', logged='user' in session,
-        title = "Cart", 
+        title="Cart", 
         films_in_chart=films, 
-        total=round(total, 2)
+        total=round(total, 2),
+        error_msg=msg
     )
 
 @app.route('/film/<int:film_id>')
@@ -228,65 +234,14 @@ def register_post():
 @app.route('/buy/<pay_method>', methods=['GET', 'POST'])
 def buy(pay_method):
     if 'user' in session:
-        if 'films' in session and pay_method in ['money', 'points']:
-            # Read history
-            with open(path.join(app.root_path, 'usuarios', session['user'], 'historial.json')) as f:
-                history = json.load(f)
-
-            # Read user data
-            with open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat')) as f:
-                user_data = json.load(f)
-            
-            # Read films
-            catalogue_data = open(os.path.join(app.root_path,'catalogue/catalogue.json'), encoding="utf-8").read()
-            catalogue = json.loads(catalogue_data)
-            films_by_id = {str(film['id']): film for film in catalogue['peliculas']}
-            id_counts = Counter(session['films'])
-            films_to_buy = [films_by_id[film_id] for film_id in id_counts]
-            for film in films_to_buy:
-                film['amount'] = id_counts[str(film['id'])]
-
+        if pay_method in ['money', 'points']:
             '''
                 Si se paga con puntos convertir los puntos a saldo primero
             '''
+            if not db.hasEnough(session['user'], pay_method):
+                return redirect(url_for('cart', msg='mn' if pay_method == 'money' else 'pt'))
 
-            # Check if user has enough money
-            total = round(sum([film['precio']*film['amount'] for film in films_to_buy]), 2)
-            if pay_method == 'money' and user_data['balance'] >= total:
-                # Substract money and add points
-                user_data['balance'] = round(user_data['balance']-total, 2)
-                user_data['points'] += int(round(total*5, 0))
-
-            elif pay_method == 'points' and user_data['points']/100 >= total:
-                # Substract points
-                user_data['points'] = int(round(user_data['points']/100 - total))
-
-            else:
-                return render_template(
-                    'cart.html', logged='user' in session,
-                    title = "Cart", 
-                    films_in_chart=films_to_buy, 
-                    total=total,
-                    error_msg=f'Not enough {pay_method}!',
-                )
-            
-            if 'user_cart' in session and session['user'] and session['user'] in session['user_cart']:
-                session['user_cart'][session['user']] = []
-                session.modified = True
-
-            # Save user data
-            with open(path.join(app.root_path, 'usuarios', session['user'], 'datos.dat'), 'w') as f:
-                json.dump(user_data, f, ensure_ascii=False, indent=4)
-
-            # Add films to history
-            for film in films_to_buy:
-                film['date'] = str(datetime.date.today())
-            history += films_to_buy
-            with open(path.join(app.root_path, 'usuarios', session['user'], 'historial.json'), 'w') as f:
-                json.dump(history, f, ensure_ascii=False, indent=4)
-            session['films'] = []
-            session.modified = True
-            
+            db.userBuy(session['user'], pay_method == 'points')            
         return redirect(url_for('cart'))
     else:
         return render_template('login.html', logged='user' in session, error_msg='You need to be logged in to buy films!', user=request.cookies.get('username'))

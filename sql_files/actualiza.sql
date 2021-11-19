@@ -20,9 +20,6 @@ ALTER TABLE customers
     ALTER COLUMN lastname DROP NOT NULL,
     ALTER COLUMN "password" TYPE VARCHAR(128);
 
-ALTER SEQUENCE customers_customerid_seq RESTART WITH 14094;
-ALTER SEQUENCE orders_orderid_seq RESTART WITH 181791;
-
 UPDATE imdb_movies SET year = '1998' WHERE year = '1998-1999';
 
 ALTER TABLE imdb_movies
@@ -59,6 +56,7 @@ ALTER TABLE orderdetail
     ADD CONSTRAINT orderid FOREIGN KEY (orderid) REFERENCES orders(orderid),
     ALTER COLUMN quantity DROP NOT NULL,
     ALTER COLUMN quantity SET DEFAULT 1;
+   
 
 ALTER TABLE orders
     ADD CONSTRAINT customerid FOREIGN KEY (customerid) REFERENCES customers(customerid),
@@ -66,9 +64,14 @@ ALTER TABLE orders
     ALTER COLUMN orderdate SET DEFAULT CURRENT_DATE,
     ALTER COLUMN tax SET DEFAULT 21;
 
+
+ALTER SEQUENCE customers_customerid_seq RESTART WITH 14094;
+ALTER SEQUENCE orders_orderid_seq RESTART WITH 181791;
+
 ALTER TABLE imdb_actormovies
     ADD CONSTRAINT movieid FOREIGN KEY (movieid) REFERENCES imdb_movies(movieid),
-    ADD CONSTRAINT actorid FOREIGN KEY (actorid) REFERENCES imdb_actors(actorid);
+    ADD CONSTRAINT actorid FOREIGN KEY (actorid) REFERENCES imdb_actors(actorid),
+    ADD PRIMARY KEY (actorid, movieid);
 
 
 CREATE TABLE moviegenres(
@@ -113,7 +116,8 @@ ALTER TABLE imdb_movielanguages
 CREATE TABLE alerts (
     prod_id int,
     alert_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (prod_id) REFERENCES products(prod_id)
+    FOREIGN KEY (prod_id) REFERENCES products(prod_id),
+    PRIMARY KEY (prod_id, alert_date)
 );
 
 
@@ -121,6 +125,7 @@ CREATE OR REPLACE FUNCTION setCustomersBalance(IN initialBalance bigint) RETURNS
     BEGIN
         UPDATE customers
         SET balance = floor(random() * ($1 + 1))::bigint;
+        -- WHERE balance IS NULL;
     END
 $$ LANGUAGE plpgsql;
 

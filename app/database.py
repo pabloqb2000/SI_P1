@@ -2,6 +2,7 @@ import sys, traceback
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, text
 from sqlalchemy.sql import select, insert, update, delete, and_
+from sqlalchemy.sql.expression import false
 
 img_files = [
     "imgs/Orgazmo.jpg",
@@ -59,7 +60,7 @@ def getUserData(username):
         "creditcard": userdata[5],
         "direction":  userdata[3],
         "salt":       userdata[8],
-        "balance":    userdata[10],
+        "balance":    round(userdata[10], 2),
         "points":     userdata[9]
     }
 
@@ -71,7 +72,7 @@ def registerUser(user_data):
         username = user_data['username'],
         password = user_data['password'],
         salt = user_data['salt'],
-        balance = user_data['balance'],
+        balance = round(user_data['balance'], 2),
         loyalty = user_data['points']
     ), False)
 
@@ -205,19 +206,26 @@ def getActors(n=5, genre='Action'):
     ]
 
 def getUserHistory(username):
-    history = execute_query(select(['*']).select_from(customers)\
+    history = execute_query(select([
+        imdb_movies.c.movieid,
+        orderdetail.c.price,
+        orderdetail.c.quantity,
+        imdb_movies.c.movietitle,
+        orders.c.orderdate,
+    ]).select_from(customers)\
         .join(orders).join(orderdetail).join(products).join(imdb_movies)\
         .where(and_(
             customers.c.username == username,
             orders.c.status != None
         )))
+
     return [{
-        'id': film[19],
-        'precio': float(film[20]),
-        'ammount': film[21],
-        'poster': img_files[film[19] % len(img_files)],
-        'titulo': film[27],
-        'date': str(film[12])
+        'id': film[0],
+        'precio': float(film[1]),
+        'amount': film[2],
+        'poster': img_files[film[0] % len(img_files)],
+        'titulo': film[3],
+        'date': str(film[4])
     } for film in history]
 
 def prodIdFromFilm(filmid):
@@ -300,9 +308,6 @@ def removeFromCart(username, filmid):
                 orderdetail.c.prod_id == prodid
             )).values(quantity = orderdetail.c.quantity - 1), False)
 
-    
-
-
 def getFilmsNTotal(username):
     # Check if user already has a cart
     userid = getUserId(username)
@@ -334,6 +339,49 @@ def getFilmsNTotal(username):
         'id':     film[0],
         'poster': img_files[film[0] % len(img_files)],
     } for film, orderdt in zip(films, orderdts)], totalamount
+
+def hasEnough(username, pay_method='money'):
+    userid, money, points = execute_query(select([
+            customers.c.customerid,
+            customers.c.balance,
+            customers.c.loyalty
+        ]).where(
+            customers.c.username == username
+        ))[0]
+    
+    credit = money if pay_method == 'money' else points / 100
+
+    amount = execute_query(select([orders.c.totalamount]).where(and_(
+        orders.c.customerid == userid,
+        orders.c.status == None
+    )))[0][0]
+
+    print(amount)
+    
+    return credit >= amount
+
+def userBuy(username, withPoints=False):
+    userid = getUserId(username)
+
+    orderid, amount = execute_query(select([orders.c.orderid, orders.c.totalamount]).where(and_(
+        orders.c.customerid == userid,
+        orders.c.status == None
+    )))[0]
+    if withPoints:
+        # Remove points
+        execute_query(update(customers)\
+            .where(customers.c.customerid == userid)\
+            .values(loyalty = customers.c.loyalty - int(amount*100)), False)
+    else:
+        # Remove money
+        print(repr(userid), repr(amount))
+        execute_query(update(customers)\
+            .where(customers.c.customerid == userid)\
+            .values(balance = customers.c.balance - amount), False)
+    # Update order
+    execute_query(update(orders).values(status='Paid').where(
+        orders.c.orderid == orderid
+    ), False)
 
 
 if __name__ == '__main__':

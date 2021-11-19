@@ -47,7 +47,7 @@ Profile
           </div>
         </a>
         <div class="amount-text">
-          <strong>Amount: {{ film.amount }}<br><br>
+          <strong>{% if film.amount > 1 %}Amount: {{ film.amount }}<br><br>{% endif %}
             Date: {{ film.date }}</strong>
         </div>
       </div>
