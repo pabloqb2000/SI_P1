@@ -355,8 +355,6 @@ def hasEnough(username, pay_method='money'):
         orders.c.customerid == userid,
         orders.c.status == None
     )))[0][0]
-
-    print(amount)
     
     return credit >= amount
 
